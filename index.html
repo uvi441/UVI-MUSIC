@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trendy Music App UI</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #0f0f0f, #1e1e1e);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+      color: #00bfff;
+    }
+
+    .search {
+      padding: 10px 20px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .song-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    .song-card {
+      background: #1c1c1c;
+      border-radius: 20px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .song-card:hover {
+      transform: scale(1.05);
+    }
+
+    .song-card img {
+      width: 100%;
+      border-radius: 15px;
+    }
+
+    .song-card h3 {
+      margin: 10px 0 5px;
+      font-size: 16px;
+    }
+
+    .song-card p {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .player {
+      background: #111;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .player .info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .player img {
+      width: 50px;
+      border-radius: 10px;
+    }
+
+    .player h4 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    .controls button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎧 SoundTrend</h1>
+    <div>❤️ 🔔</div>
+  </header>
+
+  <div class="search">
+    <input type="text" placeholder="Search for music...">
+  </div>
+
+  <div class="song-list">
+    <div class="song-card">
+      <img src="https://i.ytimg.com/vi/hHuG7FIKgtc/maxresdefault.jpg" />
+      <h3>Jhoome Jo Pathaan</h3>
+      <p>Arijit Singh</p>
+    </div>
+    <div class="song-card">
+      <img src="https://i.ytimg.com/vi/Suv5QfWKaaw/maxresdefault.jpg" />
+      <h3>Kesariya</h3>
+      <p>Arijit Singh</p>
+    </div>
+    <div class="song-card">
+      <img src="https://i.ytimg.com/vi/JgDNFQ2RaLQ/maxresdefault.jpg" />
+      <h3>Calm Down</h3>
+      <p>Rema</p>
+    </div>
+    <!-- More cards as needed -->
+  </div>
+
+  <div class="player">
+    <div class="info">
+      <img src="https://i.ytimg.com/vi/hHuG7FIKgtc/maxresdefault.jpg" />
+      <div>
+        <h4>Jhoome Jo Pathaan</h4>
+        <small>Arijit Singh</small>
+      </div>
+    </div>
+    <div class="controls">
+      <button>⏮</button>
+      <button>▶️</button>
+      <button>⏭</button>
+    </div>
+  </div>
+</body>
+</html>
 
