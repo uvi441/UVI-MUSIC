@@ -1,20 +1,46 @@
-/* Resso-स्टाइल थीम */
+/* नया स्टाइल */
 .player {
-  background: linear-gradient(#1976d2, #000);
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #1976d2, #000033);
   color: white;
-  border-radius: 15px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 0 auto;
+  border-radius: 20px;
+  padding: 25px;
+  max-width: 380px;
+  margin: 20px auto;
 }
 
-.song-info h2 {
-  font-size: 24px;
+.logo {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.song-details {
   text-align: center;
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
-.playlist li.active {
+.song-details h2 {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.artist {
+  color: #aaaaaa;
+  font-size: 16px;
+}
+
+.duration {
   color: #1976d2;
+}
+
+.likes {
+  color: #ff4081;
   font-weight: bold;
+}
+
+.playlist li {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
