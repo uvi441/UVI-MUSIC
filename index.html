@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UVi Music - Resso Clone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="player">
+    <div class="header">UVi Music</div>
+    
+    <div class="album-art">
+      <img id="albumImage" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+    </div>
+    
+    <div class="song-info">
+      <h2 id="songTitle">Never Gonna Give You Up</h2>
+      <p id="artist">Rick Astley</p>
+    </div>
+    
+    <div class="controls">
+      <button onclick="prevSong()">⏮️</button>
+      <button onclick="togglePlay()" id="playBtn">▶️</button>
+      <button onclick="nextSong()">⏭️</button>
+    </div>
+    
+    <div class="playlist">
+      <h3>Playlist</h3>
+      <ul id="songList">
+        <!-- Songs will load here -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
