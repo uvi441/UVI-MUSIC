@@ -1,62 +1,20 @@
-body {
+/* Resso-स्टाइल थीम */
+.player {
   background: linear-gradient(#1976d2, #000);
   color: white;
-  font-family: Arial;
-  margin: 0;
+  border-radius: 15px;
   padding: 20px;
-  min-height: 100vh;
-}
-
-.player {
   max-width: 400px;
   margin: 0 auto;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-.album-art {
-  width: 250px;
-  height: 250px;
-  margin: 20px auto;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-.album-art img {
-  width: 100%;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin: 30px 0;
-}
-
-.controls button {
-  background: white;
-  color: #1976d2;
-  border: none;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+.song-info h2 {
   font-size: 24px;
-  cursor: pointer;
+  text-align: center;
+  margin: 15px 0;
 }
 
-.playlist {
-  margin-top: 30px;
-}
-
-.playlist li {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  cursor: pointer;
-}
-
-.playlist li:hover {
-  background: rgba(255,255,255,0.1);
+.playlist li.active {
+  color: #1976d2;
+  font-weight: bold;
 }
