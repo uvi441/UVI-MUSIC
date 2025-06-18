@@ -1,36 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>UVi Music - Resso Clone</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="player">
-    <div class="header">UVi Music</div>
-    
-    <div class="album-art">
-      <img id="albumImage" src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
-    </div>
-    
-    <div class="song-info">
-      <h2 id="songTitle">Never Gonna Give You Up</h2>
-      <p id="artist">Rick Astley</p>
-    </div>
-    
-    <div class="controls">
-      <button onclick="prevSong()">⏮️</button>
-      <button onclick="togglePlay()" id="playBtn">▶️</button>
-      <button onclick="nextSong()">⏭️</button>
-    </div>
-    
-    <div class="playlist">
-      <h3>Playlist</h3>
-      <ul id="songList">
-        <!-- Songs will load here -->
-      </ul>
-    </div>
+<div class="player">
+  <!-- हेडर -->
+  <div class="header">
+    <h1>UVi Music</h1>
   </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  
+  <!-- एल्बम आर्ट -->
+  <div class="album-art">
+    <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+  </div>
+  
+  <!-- सॉन्ग इंफो -->
+  <div class="song-info">
+    <h2>NEVER GONNA GIVE YOU UP</h2>
+    <p>Rick Astley • 3:32</p>
+  </div>
+  
+  <!-- प्लेलिस्ट -->
+  <div class="playlist">
+    <h3>Playlist</h3>
+    <ul>
+      <li class="active">Never Gonna Give You Up - Rick Astley</li>
+      <li>Shape of You - Ed Sheeran</li>
+    </ul>
+  </div>
+</div>
