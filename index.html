@@ -1,94 +1,182 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UVi Music Player</title>
+  <title>UVi Music - Resso Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #0f0f0f, #000000);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
+    :root {
+      --primary: #1976d2;
+      --text: #ffffff;
+      --bg-dark: #121212;
+      --bg-light: #282828;
     }
     
-    .player {
-      max-width: 400px;
-      width: 100%;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .player-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 100%;
+      position: relative;
     }
     
     .header {
+      padding: 20px;
       text-align: center;
-      margin-bottom: 30px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      z-index: 10;
     }
     
     .logo {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
-      color: #1976d2;
+      color: var(--primary);
       letter-spacing: 1px;
     }
     
-    .song-display {
+    .now-playing {
+      padding: 30px 20px;
       text-align: center;
-      margin: 40px 0;
-      min-height: 120px;
+      position: relative;
+      z-index: 2;
     }
     
     .song-title {
-      font-size: 32px;
+      font-size: 24px;
       font-weight: bold;
-      line-height: 1.2;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     
     .artist {
-      font-size: 18px;
+      font-size: 16px;
       color: #aaa;
     }
     
-    .duration {
-      color: #1976d2;
-      font-weight: bold;
-      margin-left: 10px;
+    .playlist-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: linear-gradient(to bottom, transparent, var(--bg-dark) 100px);
     }
     
     .playlist {
-      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
     
-    .playlist-item {
+    .song-item {
+      display: flex;
+      align-items: center;
       padding: 15px;
-      border-bottom: 1px solid #333;
-      font-size: 16px;
+      border-radius: 10px;
+      background: var(--bg-light);
+      transition: all 0.3s ease;
     }
     
-    .current-song {
-      color: #1976d2;
+    .song-item.active {
+      background: rgba(25, 118, 210, 0.2);
+      border-left: 3px solid var(--primary);
+    }
+    
+    .song-number {
+      margin-right: 15px;
+      color: #777;
       font-weight: bold;
-      border-left: 3px solid #1976d2;
+    }
+    
+    .song-info {
+      flex: 1;
+    }
+    
+    .song-name {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    
+    .song-artist {
+      font-size: 14px;
+      color: #aaa;
+    }
+    
+    .song-duration {
+      color: #777;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
-  <div class="player">
+  <div class="player-container">
     <div class="header">
       <div class="logo">UVi MUSIC</div>
     </div>
     
-    <div class="song-display">
+    <div class="now-playing">
       <div class="song-title">NEVER GONNA GIVE YOU UP</div>
-      <div class="artist">Rick Astley <span class="duration">3:32</span></div>
+      <div class="artist">Rick Astley • 3:32</div>
     </div>
     
-    <div class="playlist">
-      <div class="playlist-item current-song">
-        Never Gonna Give You Up - Rick Astley
-      </div>
-      <div class="playlist-item">
-        Shape of You - Ed Sheeran
+    <div class="playlist-container">
+      <div class="playlist">
+        <div class="song-item active">
+          <div class="song-number">1</div>
+          <div class="song-info">
+            <div class="song-name">Never Gonna Give You Up</div>
+            <div class="song-artist">Rick Astley</div>
+          </div>
+          <div class="song-duration">3:32</div>
+        </div>
+        
+        <div class="song-item">
+          <div class="song-number">2</div>
+          <div class="song-info">
+            <div class="song-name">Shape of You</div>
+            <div class="song-artist">Ed Sheeran</div>
+          </div>
+          <div class="song-duration">3:53</div>
+        </div>
+        
+        <!-- Add more songs as needed -->
+        <div class="song-item">
+          <div class="song-number">3</div>
+          <div class="song-info">
+            <div class="song-name">Blinding Lights</div>
+            <div class="song-artist">The Weeknd</div>
+          </div>
+          <div class="song-duration">3:20</div>
+        </div>
+        
+        <div class="song-item">
+          <div class="song-number">4</div>
+          <div class="song-info">
+            <div class="song-name">Dance Monkey</div>
+            <div class="song-artist">Tones and I</div>
+          </div>
+          <div class="song-duration">3:29</div>
+        </div>
       </div>
     </div>
   </div>
