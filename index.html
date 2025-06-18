@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>UVi Music - Resso Clone</title>
+  <title>UVi MUSIC - YouTube Playlist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -11,48 +11,38 @@
       --bg-light: #282828;
     }
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
     body {
       font-family: 'Segoe UI', sans-serif;
       background: var(--bg-dark);
       color: var(--text);
-      height: 100vh;
-      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
     }
     
     .player-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      max-width: 100%;
-      position: relative;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
     }
     
     .header {
-      padding: 20px;
       text-align: center;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px);
-      z-index: 10;
+      padding: 20px 0;
     }
     
     .logo {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       color: var(--primary);
-      letter-spacing: 1px;
     }
     
     .now-playing {
-      padding: 30px 20px;
       text-align: center;
-      position: relative;
-      z-index: 2;
+      margin: 30px 0;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 15px;
     }
     
     .song-title {
@@ -62,39 +52,42 @@
     }
     
     .artist {
-      font-size: 16px;
       color: #aaa;
+      font-size: 16px;
     }
     
-    .playlist-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      background: linear-gradient(to bottom, transparent, var(--bg-dark) 100px);
+    .player {
+      width: 100%;
+      height: 80px;
+      margin: 20px 0;
     }
     
     .playlist {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      margin-top: 30px;
     }
     
     .song-item {
       display: flex;
       align-items: center;
       padding: 15px;
-      border-radius: 10px;
+      margin-bottom: 10px;
       background: var(--bg-light);
-      transition: all 0.3s ease;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .song-item:hover {
+      background: rgba(25, 118, 210, 0.1);
     }
     
     .song-item.active {
-      background: rgba(25, 118, 210, 0.2);
       border-left: 3px solid var(--primary);
+      background: rgba(25, 118, 210, 0.2);
     }
     
     .song-number {
-      margin-right: 15px;
+      width: 30px;
       color: #777;
       font-weight: bold;
     }
@@ -105,26 +98,16 @@
     
     .song-name {
       font-weight: 600;
-      margin-bottom: 3px;
     }
     
     .song-artist {
       font-size: 14px;
       color: #aaa;
+      margin-top: 3px;
     }
     
     .song-duration {
       color: #777;
-    }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 3px;
     }
   </style>
 </head>
@@ -137,48 +120,117 @@
     <div class="now-playing">
       <div class="song-title">NEVER GONNA GIVE YOU UP</div>
       <div class="artist">Rick Astley • 3:32</div>
+      <div class="player" id="youtube-player"></div>
     </div>
     
-    <div class="playlist-container">
-      <div class="playlist">
-        <div class="song-item active">
-          <div class="song-number">1</div>
-          <div class="song-info">
-            <div class="song-name">Never Gonna Give You Up</div>
-            <div class="song-artist">Rick Astley</div>
-          </div>
-          <div class="song-duration">3:32</div>
-        </div>
-        
-        <div class="song-item">
-          <div class="song-number">2</div>
-          <div class="song-info">
-            <div class="song-name">Shape of You</div>
-            <div class="song-artist">Ed Sheeran</div>
-          </div>
-          <div class="song-duration">3:53</div>
-        </div>
-        
-        <!-- Add more songs as needed -->
-        <div class="song-item">
-          <div class="song-number">3</div>
-          <div class="song-info">
-            <div class="song-name">Blinding Lights</div>
-            <div class="song-artist">The Weeknd</div>
-          </div>
-          <div class="song-duration">3:20</div>
-        </div>
-        
-        <div class="song-item">
-          <div class="song-number">4</div>
-          <div class="song-info">
-            <div class="song-name">Dance Monkey</div>
-            <div class="song-artist">Tones and I</div>
-          </div>
-          <div class="song-duration">3:29</div>
-        </div>
-      </div>
+    <div class="playlist" id="playlist">
+      <!-- Playlist will load here dynamically -->
     </div>
   </div>
+
+  <script>
+    // YouTube Playlist ID
+    const playlistId = 'PLSdNc1Zw7e-ShDLT5usPIVv6DtV8pO9jm';
+    
+    // YouTube API
+    let player;
+    let playlistItems = [];
+    let currentSongIndex = 0;
+    
+    // Load YouTube API
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youtube-player', {
+        height: '80',
+        width: '100%',
+        playerVars: {
+          listType: 'playlist',
+          list: playlistId,
+          modestbranding: 1,
+          controls: 0
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+    
+    // Player ready
+    function onPlayerReady(event) {
+      loadPlaylist();
+    }
+    
+    // Player state change
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        playNextSong();
+      }
+    }
+    
+    // Load playlist
+    function loadPlaylist() {
+      fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=YOUR_API_KEY`)
+        .then(response => response.json())
+        .then(data => {
+          playlistItems = data.items;
+          renderPlaylist();
+        });
+    }
+    
+    // Render playlist
+    function renderPlaylist() {
+      const playlistElement = document.getElementById('playlist');
+      playlistElement.innerHTML = '';
+      
+      playlistItems.forEach((item, index) => {
+        const song = item.snippet;
+        const duration = "3:00"; // You can get duration from contentDetails.duration
+        
+        const songElement = document.createElement('div');
+        songElement.className = `song-item ${index === currentSongIndex ? 'active' : ''}`;
+        songElement.innerHTML = `
+          <div class="song-number">${index + 1}</div>
+          <div class="song-info">
+            <div class="song-name">${song.title}</div>
+            <div class="song-artist">${song.videoOwnerChannelTitle}</div>
+          </div>
+          <div class="song-duration">${duration}</div>
+        `;
+        
+        songElement.addEventListener('click', () => {
+          playSong(index);
+        });
+        
+        playlistElement.appendChild(songElement);
+      });
+    }
+    
+    // Play song
+    function playSong(index) {
+      currentSongIndex = index;
+      player.playVideoAt(index);
+      updateNowPlaying();
+      renderPlaylist();
+    }
+    
+    // Play next song
+    function playNextSong() {
+      currentSongIndex = (currentSongIndex + 1) % playlistItems.length;
+      playSong(currentSongIndex);
+    }
+    
+    // Update now playing info
+    function updateNowPlaying() {
+      const currentSong = playlistItems[currentSongIndex].snippet;
+      document.querySelector('.song-title').textContent = currentSong.title;
+      document.querySelector('.artist').textContent = currentSong.videoOwnerChannelTitle + ' • 3:00';
+    }
+    
+    // Load YouTube API script
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  </script>
 </body>
 </html>
