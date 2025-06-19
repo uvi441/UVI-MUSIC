@@ -1,87 +1,60 @@
-// सॉन्ग्स डेटाबेस
+const audio = document.getElementById("audio");
+const titleEl = document.getElementById("title");
+const artistEl = document.getElementById("artist");
+const coverEl = document.getElementById("cover");
+const playBtn = document.getElementById("playBtn");
+
 const songs = [
   {
-    id: "dQw4w9WgXcQ",
-    title: "Never Gonna Give You Up",
-    artist: "Rick Astley",
-    image: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+    title: "Jhoome Jo Pathaan",
+    artist: "Arijit Singh",
+    cover: "https://i.ytimg.com/vi/hHuG7FIKgtc/maxresdefault.jpg",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
   },
   {
-    id: "JGwWNGJdvx8",
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    image: "https://i.ytimg.com/vi/JGwWNGJdvx8/maxresdefault.jpg"
+    title: "Calm Down",
+    artist: "Rema",
+    cover: "https://i.ytimg.com/vi/JgDNFQ2RaLQ/maxresdefault.jpg",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
   }
 ];
 
-let currentSong = 0;
-let player;
+let currentIndex = 0;
+let isPlaying = false;
 
-// प्लेयर लोड करें
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('player', {
-    height: '0',
-    width: '0',
-    events: {
-      'onReady': onPlayerReady
-    }
-  });
-}
-
-// प्लेलिस्ट लोड करें
-function loadPlaylist() {
-  const list = document.getElementById('songList');
-  songs.forEach((song, index) => {
-    const li = document.createElement('li');
-    li.textContent = `${song.title} - ${song.artist}`;
-    li.onclick = () => playSong(index);
-    list.appendChild(li);
-  });
-}
-
-// गाना बजाएं
-function playSong(index) {
-  currentSong = index;
+function loadSong(index) {
   const song = songs[index];
-  
-  document.getElementById('songTitle').textContent = song.title;
-  document.getElementById('artist').textContent = song.artist;
-  document.getElementById('albumImage').src = song.image;
-  
-  player.loadVideoById(song.id);
-  document.getElementById('playBtn').textContent = '⏸️';
+  titleEl.textContent = song.title;
+  artistEl.textContent = song.artist;
+  coverEl.src = song.cover;
+  audio.src = song.src;
+  playBtn.textContent = "▶️";
+  isPlaying = false;
 }
 
-// प्ले/पॉज टॉगल
 function togglePlay() {
-  const btn = document.getElementById('playBtn');
-  if (btn.textContent === '▶️') {
-    player.playVideo();
-    btn.textContent = '⏸️';
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = "⏸️";
+    isPlaying = true;
   } else {
-    player.pauseVideo();
-    btn.textContent = '▶️';
+    audio.pause();
+    playBtn.textContent = "▶️";
+    isPlaying = false;
   }
 }
 
-// अगला गाना
 function nextSong() {
-  currentSong = (currentSong + 1) % songs.length;
-  playSong(currentSong);
+  currentIndex = (currentIndex + 1) % songs.length;
+  loadSong(currentIndex);
+  if (isPlaying) audio.play();
 }
 
-// पिछला गाना
 function prevSong() {
-  currentSong = (currentSong - 1 + songs.length) % songs.length;
-  playSong(currentSong);
+  currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+  loadSong(currentIndex);
+  if (isPlaying) audio.play();
 }
 
-// पेज लोड होने पर
-window.onload = function() {
-  loadPlaylist();
-  
-  // YouTube API स्क्रिप्ट डायनामिकली लोड करें
-  const tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(tag);
-};
+// Load first song
+loadSong(currentIndex);
