@@ -3,43 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music App</title>
+  <title>Uvi - Music App</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: sans-serif;
     }
     body {
       background: #000;
       color: #fff;
+      overflow: hidden;
     }
-    .screen {
-      padding: 20px;
+    #auth, #app {
       display: none;
+      height: 100vh;
+      width: 100vw;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
-    .screen.active {
-      display: block;
-    }
-    .welcome {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .welcome input {
+    input, button {
+      margin: 8px;
       padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
       border: none;
-      margin-right: 10px;
+      border-radius: 5px;
     }
-    .welcome button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #1e90ff;
+    button {
+      background: #007bff;
       color: white;
-      border: none;
-      border-radius: 5px;
+      cursor: pointer;
+    }
+    .song-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px;
+      justify-content: center;
+      overflow-y: scroll;
+      height: 60vh;
+    }
+    .song-card {
+      width: 140px;
+      text-align: center;
+      background: #111;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .song-card img {
+      width: 100%;
+      height: 100px;
+      border-radius: 8px;
+    }
+    .now-playing {
+      position: fixed;
+      bottom: 80px;
+      width: 100%;
+      padding: 10px;
+      background: #222;
+      text-align: center;
+    }
+    .progress {
+      width: 80%;
     }
     .bottom-nav {
       position: fixed;
@@ -48,101 +74,118 @@
       background: #111;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #333;
+      padding: 10px;
     }
     .bottom-nav button {
       background: none;
       color: #fff;
+    }
+    .like-btn {
+      background: none;
       border: none;
       font-size: 18px;
-    }
-    .mini-player {
-      position: fixed;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-      background: #222;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
+      margin-top: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div id="loginScreen" class="screen active">
-    <div class="welcome">
-      <h1>Welcome to Uvi</h1>
-      <input type="text" id="username" placeholder="Enter your name" />
-      <button onclick="login()">Login</button>
+  <div id="auth">
+    <h2>Login / Signup</h2>
+    <input type="text" id="username" placeholder="Enter name" />
+    <button onclick="login()">Continue</button>
+  </div>
+
+  <div id="app">
+    <h2>Welcome to Uvi</h2>
+    <div class="song-list" id="songList"></div>
+    <div class="now-playing">
+      <h4 id="nowTitle">Now Playing</h4>
+      <audio id="audio" controls ontimeupdate="updateProgress()"></audio>
+      <input type="range" id="progressBar" class="progress" value="0" onchange="seek(event)" />
     </div>
-  </div>
-
-  <!-- Home Screen -->
-  <div id="homeScreen" class="screen">
-    <h2>Hi <span id="userDisplay"></span> 👋</h2>
-    <p>Trending Songs...</p>
-    <!-- Add song cards here later -->
-  </div>
-
-  <!-- Search Screen -->
-  <div id="searchScreen" class="screen">
-    <h2>Search Music</h2>
-    <input type="text" placeholder="Search for songs..." style="width: 100%; padding: 10px;" />
-  </div>
-
-  <!-- Library Screen -->
-  <div id="libraryScreen" class="screen">
-    <h2>Your Library</h2>
-    <p>No songs saved yet.</p>
-  </div>
-
-  <!-- Profile Screen -->
-  <div id="profileScreen" class="screen">
-    <h2>Your Profile</h2>
-    <p>Name: <span id="profileName"></span></p>
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <!-- Mini Music Player -->
-  <div class="mini-player">
-    <div>🎵 Sample Song</div>
-    <div>
-      <button>⏮️</button>
-      <button>▶️</button>
-      <button>⏭️</button>
+    <div class="bottom-nav">
+      <button onclick="alert('Home')">🏠</button>
+      <button onclick="alert('Search')">🔍</button>
+      <button onclick="alert('Profile')">👤</button>
     </div>
-  </div>
-
-  <!-- Bottom Nav -->
-  <div class="bottom-nav">
-    <button onclick="showScreen('homeScreen')">🏠</button>
-    <button onclick="showScreen('searchScreen')">🔍</button>
-    <button onclick="showScreen('libraryScreen')">📂</button>
-    <button onclick="showScreen('profileScreen')">👤</button>
   </div>
 
   <script>
+    const songs = [
+      { id: "1", title: "Jhoome Jo Pathaan", artist: "Arijit Singh", cover: "https://i.ytimg.com/vi/hHuG7FIKgtc/maxresdefault.jpg", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { id: "2", title: "Calm Down", artist: "Rema", cover: "https://i.ytimg.com/vi/JgDNFQ2RaLQ/maxresdefault.jpg", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { id: "3", title: "Mockingbird", artist: "Eminem", cover: "https://i.ytimg.com/vi/YVkUvmDQ3HY/maxresdefault.jpg", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
+
+    const likedSongs = JSON.parse(localStorage.getItem('uviLikes')) || [];
+    const audio = document.getElementById("audio");
+    const progress = document.getElementById("progressBar");
+    let currentSong = 0;
+
     function login() {
-      const name = document.getElementById('username').value;
-      if (name.trim() !== '') {
-        document.getElementById('loginScreen').classList.remove('active');
-        document.getElementById('homeScreen').classList.add('active');
-        document.getElementById('userDisplay').textContent = name;
-        document.getElementById('profileName').textContent = name;
+      const name = document.getElementById("username").value;
+      if (name) {
+        localStorage.setItem("uviUser", name);
+        showApp();
       }
     }
 
-    function logout() {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('loginScreen').classList.add('active');
+    function showApp() {
+      document.getElementById('auth').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      loadSong(0);
+      renderSongs();
     }
 
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
+    function loadSong(index) {
+      currentSong = index;
+      audio.src = songs[index].src;
+      document.getElementById("nowTitle").innerText = songs[index].title;
+      audio.play();
+    }
+
+    function updateProgress() {
+      const val = (audio.currentTime / audio.duration) * 100;
+      progress.value = val || 0;
+    }
+
+    function seek(e) {
+      const val = e.target.value;
+      audio.currentTime = (val / 100) * audio.duration;
+    }
+
+    function renderSongs() {
+      const list = document.getElementById("songList");
+      list.innerHTML = "";
+      songs.forEach((song, index) => {
+        const liked = likedSongs.includes(song.id);
+        const card = document.createElement("div");
+        card.className = "song-card";
+        card.innerHTML = `
+          <img src="${song.cover}" />
+          <h3>${song.title}</h3>
+          <p>${song.artist}</p>
+          <button class="like-btn" onclick="toggleLike('${song.id}', this)">${liked ? "❤️" : "🤍"}</button>
+        `;
+        card.onclick = () => loadSong(index);
+        list.appendChild(card);
+      });
+    }
+
+    function toggleLike(id, btn) {
+      const index = likedSongs.indexOf(id);
+      if (index > -1) likedSongs.splice(index, 1);
+      else likedSongs.push(id);
+      localStorage.setItem('uviLikes', JSON.stringify(likedSongs));
+      btn.textContent = likedSongs.includes(id) ? "❤️" : "🤍";
+    }
+
+    // Load session if already logged in
+    if (localStorage.getItem("uviUser")) {
+      showApp();
+    } else {
+      document.getElementById("auth").style.display = "flex";
     }
   </script>
 </body>
