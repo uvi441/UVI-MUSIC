@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uvi Music App</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -15,7 +14,6 @@
       --card: #f3f7ff;
       --border: #dce5f2;
     }
-
     body.dark {
       --bg: #111111;
       --text: #ffffff;
@@ -23,7 +21,6 @@
       --card: #1a1a1a;
       --border: #333;
     }
-
     * {
       margin: 0;
       padding: 0;
@@ -31,7 +28,6 @@
       font-family: 'Inter', sans-serif;
       transition: all 0.3s ease;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -40,7 +36,6 @@
       height: 100dvh;
       overflow: hidden;
     }
-
     header {
       padding: 1rem;
       font-size: 1.25rem;
@@ -51,13 +46,11 @@
       justify-content: space-between;
       align-items: center;
     }
-
     #main {
       flex: 1;
       overflow-y: auto;
       padding: 1rem;
     }
-
     .song-card {
       background: var(--card);
       border-radius: 12px;
@@ -66,47 +59,127 @@
       display: flex;
       gap: 1rem;
       align-items: center;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-
     .song-card img {
       width: 64px;
       height: 64px;
       border-radius: 8px;
       object-fit: cover;
     }
-
     .song-info {
       flex: 1;
     }
-
     .song-info h4 {
       font-size: 1rem;
       margin-bottom: 0.25rem;
     }
-
     .song-info p {
       font-size: 0.875rem;
       color: var(--subtext);
     }
-
     .like {
       font-size: 1.2rem;
       cursor: pointer;
     }
 
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: var(--border);
-      position: relative;
-      margin: 0.5rem 0;
+    /* Mini Player */
+    .mini-player {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .mini-player img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .mini-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .mini-info h4 {
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mini-info p {
+      font-size: 0.8rem;
+      color: var(--subtext);
     }
 
-    .progress-bar .fill {
-      height: 100%;
+    .mini-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Full Player */
+    .full-player {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 2px solid var(--border);
+      padding: 1rem;
+      transition: bottom 0.4s ease;
+      z-index: 999;
+    }
+    .full-player.active {
+      bottom: 0;
+    }
+    .full-player .top {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .full-player .top button {
+      background: none;
+      font-size: 1.5rem;
+      border: none;
+      color: var(--text);
+    }
+    .full-player img {
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+    .full-player .title {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .full-player .artist {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--subtext);
+      margin-bottom: 1rem;
+    }
+    .full-player .player-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+    .full-player .player-controls button {
+      font-size: 1.5rem;
       background: var(--primary);
-      width: 0%;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
     }
 
     .bottom-nav {
@@ -116,99 +189,14 @@
       background: var(--card);
       border-top: 1px solid var(--border);
     }
-
     .bottom-nav button {
       background: none;
       border: none;
       font-size: 1rem;
       color: var(--text);
     }
-
-    .mini-player {
-      position: fixed;
-      bottom: 60px;
-      left: 0;
-      right: 0;
-      background: var(--card);
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-      cursor: pointer;
-    }
-
-    .mini-player img {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .mini-player .info {
-      flex: 1;
-      margin-left: 10px;
-    }
-
-    .mini-player .info h4 {
-      font-size: 0.9rem;
-      margin: 0;
-    }
-
-    .mini-player .info p {
-      font-size: 0.75rem;
-      color: var(--subtext);
-      margin: 0;
-    }
-
-    .full-player {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: 0;
-      background: var(--bg);
-      padding: 2rem 1rem;
-      z-index: 999;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .full-player.active {
-      display: flex;
-    }
-
-    .full-player img {
-      width: 200px;
-      height: 200px;
-      border-radius: 16px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-    }
-
-    .full-player h2,
-    .full-player p {
-      text-align: center;
-    }
-
-    .full-player .actions {
-      margin-top: 1rem;
-      display: flex;
-      gap: 1rem;
-    }
-
-    .full-player .actions button {
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      color: var(--text);
-    }
   </style>
 </head>
-
 <body>
   <header>
     Uvi
@@ -216,43 +204,52 @@
   </header>
 
   <div id="main">
-    <input type="text" placeholder="Search songs..." id="search"
-      style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
+    <input type="text" placeholder="Search songs..." id="search" style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
 
-    <div class="song-card" data-title="Night Changes">
+    <div class="song-card" data-title="Night Changes" onclick="openMiniPlayer()">
       <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
       <div class="song-info">
         <h4>Night Changes</h4>
         <p>One Direction</p>
       </div>
-      <div class="like" onclick="toggleLike(this)">🤍</div>
+      <div class="like" onclick="toggleLike(this);event.stopPropagation()">🤍</div>
       <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
     </div>
 
     <div class="progress-bar">
-      <div class="fill" id="progressFill"></div>
+      <div class="fill" id="progressFill" style="height:4px;background:var(--primary);width:0%;"></div>
     </div>
   </div>
 
-  <div class="mini-player" onclick="toggleFullPlayer()">
-    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="thumb">
-    <div class="info">
+  <!-- Mini Player -->
+  <div class="mini-player" onclick="expandFullPlayer()">
+    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
+    <div class="mini-info">
       <h4>Night Changes</h4>
       <p>One Direction</p>
     </div>
-    <button onclick="togglePlay(event)">▶️</button>
+    <div class="mini-controls">
+      <button onclick="event.stopPropagation(); backSong()">◄</button>
+      <button onclick="event.stopPropagation(); play()">▶️</button>
+      <button onclick="event.stopPropagation(); pause()">⏸️</button>
+      <button onclick="event.stopPropagation(); nextSong()">►</button>
+    </div>
   </div>
 
+  <!-- Full Player -->
   <div class="full-player" id="fullPlayer">
-    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover">
-    <h2>Night Changes</h2>
-    <p>One Direction</p>
-    <div class="actions">
-      <button onclick="prevSong()">⏮️</button>
-      <button onclick="togglePlay(event)">▶️</button>
-      <button onclick="nextSong()">⏭️</button>
+    <div class="top">
+      <button onclick="collapseFullPlayer()">∨</button>
     </div>
-    <button onclick="toggleFullPlayer()">Close</button>
+    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
+    <div class="title">Night Changes</div>
+    <div class="artist">One Direction</div>
+    <div class="player-controls">
+      <button onclick="backSong()">◄</button>
+      <button onclick="play()">▶️</button>
+      <button onclick="pause()">⏸️</button>
+      <button onclick="nextSong()">►</button>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -264,37 +261,29 @@
   <script>
     const audio = document.getElementById("audio");
     const progressFill = document.getElementById("progressFill");
+    const miniPlayer = document.querySelector(".mini-player");
     const fullPlayer = document.getElementById("fullPlayer");
 
     function play() { audio.play(); }
     function pause() { audio.pause(); }
-
-    function togglePlay(e) {
-      e.stopPropagation();
-      if (audio.paused) audio.play();
-      else audio.pause();
-    }
-
-    function toggleFullPlayer() {
-      fullPlayer.classList.toggle("active");
-    }
-
-    function prevSong() {
-      alert("Previous song not implemented yet.");
-    }
-
-    function nextSong() {
-      alert("Next song not implemented yet.");
-    }
+    function backSong() { audio.currentTime = Math.max(0, audio.currentTime - 10); }
+    function nextSong() { audio.currentTime = Math.min(audio.duration, audio.currentTime + 10); }
 
     audio.ontimeupdate = () => {
       const percent = (audio.currentTime / audio.duration) * 100;
       progressFill.style.width = percent + "%";
+      localStorage.setItem('uvi-progress', audio.currentTime);
+    };
+
+    window.onload = () => {
+      const savedTime = localStorage.getItem('uvi-progress');
+      if (savedTime) audio.currentTime = savedTime;
     };
 
     function toggleLike(el) {
       const isLiked = el.textContent === "💙";
       el.textContent = isLiked ? "🤍" : "💙";
+      localStorage.setItem("uvi-liked-night", !isLiked);
     }
 
     function toggleTheme() {
@@ -307,8 +296,20 @@
         const title = card.dataset.title.toLowerCase();
         card.style.display = title.includes(query) ? "flex" : "none";
       });
+    };
+
+    function openMiniPlayer() {
+      miniPlayer.style.display = "flex";
+      play();
+    }
+
+    function expandFullPlayer() {
+      fullPlayer.classList.add("active");
+    }
+
+    function collapseFullPlayer() {
+      fullPlayer.classList.remove("active");
     }
   </script>
 </body>
-
 </html>
