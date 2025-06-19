@@ -58,6 +58,21 @@
       padding: 1rem;
     }
 
+    .playlist-tags {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .playlist-tags button {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
     .song-card {
       background: var(--card);
       border-radius: 12px;
@@ -110,75 +125,10 @@
       color: var(--text);
     }
 
-    .mini-player {
-      position: fixed;
-      bottom: 56px;
-      left: 0;
-      right: 0;
-      background: var(--card);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border-top: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .mini-player img {
-      width: 40px;
-      height: 40px;
-      border-radius: 6px;
-    }
-
-    .mini-info {
-      flex: 1;
-      margin-left: 1rem;
-    }
-
-    .mini-controls button {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .expanded-player {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--bg);
+    #backToAll {
       display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 99;
-    }
-
-    .expanded-player.active {
-      display: flex;
-    }
-
-    .expanded-player .close {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .player-controls button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      margin: 0 0.5rem;
-      border-radius: 8px;
-      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
       cursor: pointer;
     }
   </style>
@@ -191,9 +141,20 @@
   </header>
 
   <div id="main">
-    <input type="text" placeholder="Search songs..." id="search" style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
+    <input type="text" placeholder="Search songs..." id="search"
+      style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
 
-    <div class="song-card" data-title="Night Changes">
+    <div class="playlist-tags">
+      <button onclick="filterByCategory('All')">All</button>
+      <button onclick="filterByCategory('Chill')">Chill</button>
+      <button onclick="filterByCategory('Romantic')">Romantic</button>
+      <button onclick="filterByCategory('Sad')">Sad</button>
+    </div>
+
+    <div id="backToAll" onclick="filterByCategory('All')">← Back to All Songs</div>
+
+    <!-- Song Cards -->
+    <div class="song-card" data-title="Night Changes" data-category="Romantic">
       <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
       <div class="song-info">
         <h4>Night Changes</h4>
@@ -201,28 +162,23 @@
       </div>
       <div class="like" onclick="toggleLike(this)">🤍</div>
     </div>
-  </div>
 
-  <div class="mini-player" onclick="toggleExpandedPlayer()">
-    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
-    <div class="mini-info">
-      <div>Night Changes</div>
-      <div style="font-size: 0.875rem; color: var(--subtext);">One Direction</div>
+    <div class="song-card" data-title="Ocean Eyes" data-category="Chill">
+      <img src="https://i.imgur.com/tGbZb2a.jpeg" alt="cover" />
+      <div class="song-info">
+        <h4>Ocean Eyes</h4>
+        <p>Billie Eilish</p>
+      </div>
+      <div class="like" onclick="toggleLike(this)">🤍</div>
     </div>
-    <div class="mini-controls">
-      <button id="miniPlayPause" onclick="togglePlay(event)">Play</button>
-    </div>
-  </div>
 
-  <div class="expanded-player" id="expandedPlayer">
-    <div class="close" onclick="toggleExpandedPlayer()">⬆️</div>
-    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" style="width:200px;height:200px;border-radius:16px;margin-bottom:1rem;" />
-    <h3>Night Changes</h3>
-    <p style="color:var(--subtext);margin-bottom:1rem;">One Direction</p>
-    <div class="player-controls">
-      <button onclick="backSong()">◄</button>
-      <button id="fullPlayPause" onclick="togglePlay(event)">Play</button>
-      <button onclick="nextSong()">►</button>
+    <div class="song-card" data-title="Someone Like You" data-category="Sad">
+      <img src="https://i.imgur.com/n9z3sLg.jpeg" alt="cover" />
+      <div class="song-info">
+        <h4>Someone Like You</h4>
+        <p>Adele</p>
+      </div>
+      <div class="like" onclick="toggleLike(this)">🤍</div>
     </div>
   </div>
 
@@ -232,53 +188,40 @@
     <button onclick="alert('Library coming soon')">Library</button>
   </div>
 
-  <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-
   <script>
-    const audio = document.getElementById("audio");
-    let isPlaying = false;
-
-    function togglePlay(e) {
-      e.stopPropagation();
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-    }
-
-    audio.onplay = () => {
-      isPlaying = true;
-      document.getElementById("miniPlayPause").textContent = "Pause";
-      document.getElementById("fullPlayPause").textContent = "Pause";
-    };
-
-    audio.onpause = () => {
-      isPlaying = false;
-      document.getElementById("miniPlayPause").textContent = "Play";
-      document.getElementById("fullPlayPause").textContent = "Play";
-    };
-
-    function toggleExpandedPlayer() {
-      document.getElementById("expandedPlayer").classList.toggle("active");
-    }
-
-    function backSong() {
-      audio.currentTime = 0;
-    }
-
-    function nextSong() {
-      audio.currentTime = audio.duration;
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
     }
 
     function toggleLike(el) {
       const isLiked = el.textContent === "💙";
       el.textContent = isLiked ? "🤍" : "💙";
-      localStorage.setItem("uvi-liked-night", !isLiked);
     }
 
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
+    // Search Logic
+    document.getElementById("search").oninput = function (e) {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll(".song-card").forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        card.style.display = title.includes(query) ? "flex" : "none";
+      });
+    };
+
+    // Filter by Category
+    function filterByCategory(category) {
+      const backBtn = document.getElementById("backToAll");
+      const cards = document.querySelectorAll(".song-card");
+
+      if (category === 'All') {
+        cards.forEach(card => card.style.display = "flex");
+        backBtn.style.display = "none";
+      } else {
+        cards.forEach(card => {
+          const cardCat = card.dataset.category;
+          card.style.display = cardCat === category ? "flex" : "none";
+        });
+        backBtn.style.display = "block";
+      }
     }
   </script>
 </body>
