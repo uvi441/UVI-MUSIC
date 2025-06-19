@@ -1,46 +1,48 @@
-/* नया स्टाइल */
+body {
+  margin: 0;
+  background: linear-gradient(to bottom, #0f0f0f, #000);
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .player {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom, #1976d2, #000033);
-  color: white;
-  border-radius: 20px;
-  padding: 25px;
-  max-width: 380px;
-  margin: 20px auto;
-}
-
-.logo {
-  width: 40px;
-  height: 40px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
-
-.song-details {
   text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.cover {
+  width: 100%;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 20px #1e1e1e;
+}
+
+.info h2 {
+  margin: 10px 0 4px;
+  font-size: 20px;
+}
+.info p {
+  margin: 0;
+  font-size: 14px;
+  color: #aaa;
+}
+
+audio {
+  width: 100%;
   margin: 20px 0;
 }
 
-.song-details h2 {
-  font-size: 24px;
-  margin-bottom: 5px;
-}
-
-.artist {
-  color: #aaaaaa;
-  font-size: 16px;
-}
-
-.duration {
-  color: #1976d2;
-}
-
-.likes {
-  color: #ff4081;
-  font-weight: bold;
-}
-
-.playlist li {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+.controls button {
+  background: #1e90ff;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 10px;
+  border-radius: 30px;
+  font-size: 18px;
+  color: white;
 }
