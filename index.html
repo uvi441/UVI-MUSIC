@@ -2,210 +2,310 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #4aa5ff;
-      --bg: #ffffff;
-      --text: #111111;
-      --subtext: #555;
-      --card: #f3f7ff;
-      --border: #dce5f2;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uvi Music App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4aa5ff;
+      --bg: #ffffff;
+      --text: #111111;
+      --subtext: #555;
+      --card: #f3f7ff;
+      --border: #dce5f2;
+    }
 
-    body.dark {
-      --bg: #111111;
-      --text: #ffffff;
-      --subtext: #aaa;
-      --card: #1a1a1a;
-      --border: #333;
-    }
+    body.dark {
+      --bg: #111111;
+      --text: #ffffff;
+      --subtext: #aaa;
+      --card: #1a1a1a;
+      --border: #333;
+    }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.3s ease;
-    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      overflow: hidden;
-    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
 
-    header {
-      padding: 1rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    header {
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    #main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-    }
+    #main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
 
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
+    .song-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
 
-    .filter-tabs button {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      background: var(--border);
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
+    .song-card img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
 
-    .filter-tabs button.active {
-      background: var(--primary);
-      color: #fff;
-    }
+    .song-info {
+      flex: 1;
+    }
 
-    .song-card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
+    .song-info h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
 
-    .song-card img {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
+    .song-info p {
+      font-size: 0.875rem;
+      color: var(--subtext);
+    }
 
-    .song-info {
-      flex: 1;
-    }
+    .like {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
 
-    .song-info h4 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      position: relative;
+      margin: 0.5rem 0;
+    }
 
-    .song-info p {
-      font-size: 0.875rem;
-      color: var(--subtext);
-    }
+    .progress-bar .fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+    }
 
-    .like {
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+    }
 
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 0.75rem 0;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-    }
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      color: var(--text);
+    }
 
-    .bottom-nav button {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: var(--text);
-    }
-  </style>
+    /* MINI PLAYER */
+    .mini-player {
+      position: fixed;
+      bottom: 56px;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      gap: 0.75rem;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .mini-player img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .mini-info {
+      flex: 1;
+    }
+
+    .mini-info h4 {
+      font-size: 0.95rem;
+    }
+
+    .mini-toggle-btn {
+      font-size: 1.2rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+    }
+
+    .full-player {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      background: var(--bg);
+      display: none;
+      flex-direction: column;
+      z-index: 20;
+      padding: 1rem;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .full-player .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .full-player .top-bar button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+  </style>
 </head>
 
 <body>
-  <header>
-    Uvi
-    <button onclick="toggleTheme()">🌓</button>
-  </header>
+  <header>
+    Uvi
+    <button onclick="toggleTheme()">🌓</button>
+  </header>
 
-  <div id="main">
-    <input type="text" placeholder="Search songs..." id="search" style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
+  <div id="main">
+    <input type="text" placeholder="Search songs..." id="search" style="width:100%;padding:0.5rem;margin-bottom:1rem;border:1px solid var(--border);border-radius:8px;">
 
-    <div class="filter-tabs">
-      <button class="active" onclick="filterSongs('all')">All</button>
-      <button onclick="filterSongs('liked')">Liked</button>
-    </div>
+    <div class="song-card" data-title="Night Changes">
+      <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
+      <div class="song-info">
+        <h4>Night Changes</h4>
+        <p>One Direction</p>
+      </div>
+      <div class="like" onclick="toggleLike(this)">🤍</div>
+      <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    </div>
 
-    <div class="song-card" data-title="Night Changes" data-id="night-changes">
-      <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover" />
-      <div class="song-info">
-        <h4>Night Changes</h4>
-        <p>One Direction</p>
-      </div>
-      <div class="like" onclick="toggleLike(this, 'night-changes')">🤍</div>
-    </div>
-  </div>
+    <div class="progress-bar">
+      <div class="fill" id="progressFill"></div>
+    </div>
+  </div>
 
-  <div class="bottom-nav">
-    <button onclick="alert('For You coming soon')">For You</button>
-    <button onclick="alert('Playlists coming soon')">Playlists</button>
-    <button onclick="alert('Library coming soon')">Library</button>
-  </div>
+  <div class="mini-player" onclick="toggleFullPlayer()">
+    <img src="https://i.imgur.com/GJYb6U0.jpeg" />
+    <div class="mini-info">
+      <h4>Night Changes</h4>
+    </div>
+    <button class="mini-toggle-btn" onclick="event.stopPropagation(); togglePlayPause(this)">▶️</button>
+  </div>
 
-  <script>
-    const likedSongs = JSON.parse(localStorage.getItem('uvi-liked') || '{}');
+  <div class="full-player" id="fullPlayer">
+    <div class="top-bar">
+      <button onclick="toggleFullPlayer()">⬇️</button>
+      <h3>Now Playing</h3>
+      <div style="width: 1.5rem;"></div>
+    </div>
+    <img src="https://i.imgur.com/GJYb6U0.jpeg" style="width:100%;border-radius:16px;margin-bottom:1rem;" />
+    <h2 style="margin-bottom:0.5rem;">Night Changes</h2>
+    <p style="color:var(--subtext);margin-bottom:1rem;">One Direction</p>
+    <div style="display:flex;justify-content:space-around;align-items:center;">
+      <button onclick="prev()">⏮️</button>
+      <button onclick="togglePlayPause(this)">⏯️</button>
+      <button onclick="next()">⏭️</button>
+    </div>
+  </div>
 
-    function toggleLike(el, id) {
-      likedSongs[id] = !likedSongs[id];
-      el.textContent = likedSongs[id] ? "💙" : "🤍";
-      localStorage.setItem('uvi-liked', JSON.stringify(likedSongs));
-    }
+  <div class="bottom-nav">
+    <button onclick="alert('For You coming soon')">For You</button>
+    <button onclick="alert('Playlists coming soon')">Playlists</button>
+    <button onclick="alert('Library coming soon')">Library</button>
+  </div>
 
-    function filterSongs(category) {
-      document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+  <script>
+    const audio = document.getElementById("audio");
+    const progressFill = document.getElementById("progressFill");
 
-      document.querySelectorAll(".song-card").forEach(card => {
-        const id = card.dataset.id;
-        if (category === "all") {
-          card.style.display = "flex";
-        } else if (category === "liked") {
-          card.style.display = likedSongs[id] ? "flex" : "none";
-        }
-      });
-    }
+    function togglePlayPause(btn) {
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = "⏸️";
+      } else {
+        audio.pause();
+        btn.textContent = "▶️";
+      }
+    }
 
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
-    }
+    audio.ontimeupdate = () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+    };
 
-    document.getElementById("search").oninput = function (e) {
-      const query = e.target.value.toLowerCase();
-      document.querySelectorAll(".song-card").forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        card.style.display = title.includes(query) ? "flex" : "none";
-      });
-    };
+    function toggleLike(el) {
+      const isLiked = el.textContent === "💙";
+      el.textContent = isLiked ? "🤍" : "💙";
+    }
 
-    window.onload = () => {
-      document.querySelectorAll('.song-card').forEach(card => {
-        const id = card.dataset.id;
-        const likeEl = card.querySelector('.like');
-        if (likedSongs[id]) likeEl.textContent = '💙';
-      });
-    }
-  </script>
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    document.getElementById("search").oninput = function (e) {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll(".song-card").forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        card.style.display = title.includes(query) ? "flex" : "none";
+      });
+    }
+
+    function toggleFullPlayer() {
+      const fullPlayer = document.getElementById("fullPlayer");
+      fullPlayer.style.display = fullPlayer.style.display === "flex" ? "none" : "flex";
+    }
+
+    function prev() {
+      alert("Previous song");
+    }
+
+    function next() {
+      alert("Next song");
+    }
+  </script>
 </body>
 
 </html>
