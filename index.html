@@ -3,118 +3,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Login</title>
+  <title>Uvi Music App</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Arial', sans-serif;
     }
-
     body {
-      background: black;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
+      background: #000;
+      color: #fff;
     }
-
-    .container {
-      width: 90%;
-      max-width: 400px;
-      background: #111;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #00bfff;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #00bfff;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .switch {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    .hidden {
+    .screen {
+      padding: 20px;
       display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+    .welcome {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .welcome input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      margin-right: 10px;
+    }
+    .welcome button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+    }
+    .bottom-nav button {
+      background: none;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+    }
+    .mini-player {
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      background: #222;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="loginForm">
-    <h2>Welcome to Uvi</h2>
-    <input type="text" id="loginName" placeholder="Enter your name" />
-    <button onclick="login()">Login</button>
-    <div class="switch">
-      New here? <a href="#" onclick="toggleForm('signup')">Sign up</a>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen active">
+    <div class="welcome">
+      <h1>Welcome to Uvi</h1>
+      <input type="text" id="username" placeholder="Enter your name" />
+      <button onclick="login()">Login</button>
     </div>
   </div>
 
-  <div class="container hidden" id="signupForm">
-    <h2>Join Uvi</h2>
-    <input type="text" id="signupName" placeholder="Your name" />
-    <input type="email" id="signupEmail" placeholder="Your email" />
-    <input type="password" id="signupPassword" placeholder="Password" />
-    <button onclick="signup()">Register</button>
-    <div class="switch">
-      Already have an account? <a href="#" onclick="toggleForm('login')">Login</a>
+  <!-- Home Screen -->
+  <div id="homeScreen" class="screen">
+    <h2>Hi <span id="userDisplay"></span> 👋</h2>
+    <p>Trending Songs...</p>
+    <!-- Add song cards here later -->
+  </div>
+
+  <!-- Search Screen -->
+  <div id="searchScreen" class="screen">
+    <h2>Search Music</h2>
+    <input type="text" placeholder="Search for songs..." style="width: 100%; padding: 10px;" />
+  </div>
+
+  <!-- Library Screen -->
+  <div id="libraryScreen" class="screen">
+    <h2>Your Library</h2>
+    <p>No songs saved yet.</p>
+  </div>
+
+  <!-- Profile Screen -->
+  <div id="profileScreen" class="screen">
+    <h2>Your Profile</h2>
+    <p>Name: <span id="profileName"></span></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Mini Music Player -->
+  <div class="mini-player">
+    <div>🎵 Sample Song</div>
+    <div>
+      <button>⏮️</button>
+      <button>▶️</button>
+      <button>⏭️</button>
     </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button onclick="showScreen('homeScreen')">🏠</button>
+    <button onclick="showScreen('searchScreen')">🔍</button>
+    <button onclick="showScreen('libraryScreen')">📂</button>
+    <button onclick="showScreen('profileScreen')">👤</button>
   </div>
 
   <script>
-    function toggleForm(show) {
-      document.getElementById('loginForm').classList.toggle('hidden', show !== 'login');
-      document.getElementById('signupForm').classList.toggle('hidden', show !== 'signup');
-    }
-
     function login() {
-      const name = document.getElementById('loginName').value;
-      if (name.trim()) {
-        localStorage.setItem('uviUser', name);
-        window.location.href = 'player.html'; // next page after login
-      } else {
-        alert('Please enter your name');
+      const name = document.getElementById('username').value;
+      if (name.trim() !== '') {
+        document.getElementById('loginScreen').classList.remove('active');
+        document.getElementById('homeScreen').classList.add('active');
+        document.getElementById('userDisplay').textContent = name;
+        document.getElementById('profileName').textContent = name;
       }
     }
 
-    function signup() {
-      const name = document.getElementById('signupName').value;
-      const email = document.getElementById('signupEmail').value;
-      const pass = document.getElementById('signupPassword').value;
-      if (name && email && pass) {
-        localStorage.setItem('uviUser', name);
-        window.location.href = 'player.html';
-      } else {
-        alert('Fill all fields');
-      }
+    function logout() {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('loginScreen').classList.add('active');
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
     }
   </script>
 </body>
