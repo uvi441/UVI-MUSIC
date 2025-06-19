@@ -131,68 +131,6 @@
       color: var(--primary);
       cursor: pointer;
     }
-    
-    #miniPlayer {
-      position: fixed;
-      bottom: 60px;
-      left: 0;
-      right: 0;
-      background: var(--card);
-      padding: 0.75rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    #miniPlayer.hidden {
-      display: none;
-    }
-
-    #fullPlayer {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 10;
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 1rem;
-    }
-
-    #fullPlayer.active {
-      display: flex;
-    }
-
-    #fullPlayer .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #fullPlayer img {
-      width: 100%;
-      max-width: 300px;
-      margin: 2rem auto;
-      border-radius: 12px;
-      object-fit: cover;
-    }
-
-    #fullPlayer .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    #fullPlayer .controls button {
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text);
-    }
   </style>
 </head>
 
@@ -244,29 +182,6 @@
     </div>
   </div>
 
-  <!-- Mini Player -->
-  <div id="miniPlayer" onclick="toggleFullPlayer()">
-    <div>▶️ Night Changes</div>
-    <div>⏫</div>
-  </div>
-
-  <!-- Full Player -->
-  <div id="fullPlayer">
-    <div class="top">
-      <button onclick="toggleFullPlayer()">⬇️</button>
-      <div>Now Playing</div>
-      <div></div>
-    </div>
-    <img src="https://i.imgur.com/GJYb6U0.jpeg" alt="cover">
-    <h3 style="text-align:center;">Night Changes</h3>
-    <p style="text-align:center;color:var(--subtext);">One Direction</p>
-    <div class="controls">
-      <button>⏮</button>
-      <button>⏯</button>
-      <button>⏭</button>
-    </div>
-  </div>
-
   <div class="bottom-nav">
     <button onclick="alert('For You coming soon')">For You</button>
     <button onclick="alert('Playlists coming soon')">Playlists</button>
@@ -301,20 +216,16 @@
         cards.forEach(card => card.style.display = "flex");
         backBtn.style.display = "none";
       } else {
-        cards.forEach(card => {
+        cards.forEach(card =>
+ {
           const cardCat = card.dataset.category;
           card.style.display = cardCat === category ? "flex" : "none";
         });
         backBtn.style.display = "block";
       }
     }
-
-    // Toggle Full Player
-    function toggleFullPlayer() {
-      document.getElementById("fullPlayer").classList.toggle("active");
-      document.getElementById("miniPlayer").classList.toggle("hidden");
-    }
   </script>
 </body>
 
 </html>
+Ye lo html code jo bhi add kr na hai ad kr ke do 
