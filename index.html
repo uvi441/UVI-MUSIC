@@ -3,64 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Uvi – Music App</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Uvi Music App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    .container {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .container.active {
+      display: flex;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background: #1db954;
+      color: white;
+      cursor: pointer;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .player img {
+      width: 80%;
+      max-width: 300px;
+      border-radius: 16px;
+    }
+
+    .controls {
+      margin: 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .progress {
+      width: 80%;
+    }
+
+    .logout {
+      margin-top: 20px;
+      background: #ff4d4d;
+    }
+
+    .nav-btns {
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
 
-  <div id="app">
-    <!-- Login / Signup Page -->
-    <div class="auth-screen" id="authScreen">
-      <h1>Welcome to <span class="uvi">Uvi</span></h1>
-      <input type="text" id="username" placeholder="Enter your name" />
-      <button onclick="login()">Login</button>
-    </div>
-
-    <!-- Main App -->
-    <div class="main" id="mainApp" style="display:none">
-      <header>
-        <h1>🩵 Uvi</h1>
-        <div class="actions">
-          <button onclick="toggleTheme()">🌓</button>
-          <button onclick="logout()">🚪</button>
-        </div>
-      </header>
-
-      <div class="search">
-        <input type="text" id="searchInput" oninput="filterSongs()" placeholder="Search songs... 🔍" />
-      </div>
-
-      <h3 class="section-title">Playlists</h3>
-      <div class="playlists">
-        <div class="playlist">🔥 Trending</div>
-        <div class="playlist">💖 Favourites</div>
-        <div class="playlist">🎧 Chill</div>
-      </div>
-
-      <h3 class="section-title">All Songs</h3>
-      <div class="song-list" id="songList"></div>
-
-      <div class="player">
-        <div class="info">
-          <img id="cover" src="" />
-          <div>
-            <h4 id="title">Title</h4>
-            <small id="artist">Artist</small>
-            <div class="progress-bar" onclick="seek(event)">
-              <div class="progress-bar-inner" id="progress"></div>
-            </div>
-          </div>
-        </div>
-        <div class="controls">
-          <button onclick="prevSong()">⏮</button>
-          <button onclick="togglePlay()" id="playBtn">▶️</button>
-          <button onclick="nextSong()">⏭</button>
-        </div>
-      </div>
+  <!-- Login -->
+  <div class="container" id="loginPage">
+    <h1>Login to Uvi</h1>
+    <input type="text" id="loginName" placeholder="Your Name" />
+    <input type="password" id="loginPass" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div class="nav-btns">
+      <button onclick="showSignup()">Go to Signup</button>
     </div>
   </div>
 
-  <audio id="audio"></audio>
-  <script src="script.js"></script>
+  <!-- Signup -->
+  <div class="container" id="signupPage">
+    <h1>Sign Up</h1>
+    <input type="text" id="signupName" placeholder="Choose a Name" />
+    <input type="password" id="signupPass" placeholder="Choose a Password" />
+    <button onclick="signup()">Sign Up</button>
+    <div class="nav-btns">
+      <button onclick="showLogin()">Go to Login</button>
+    </div>
+  </div>
+
+  <!-- Player -->
+  <div class="container" id="playerPage">
+    <h1>Welcome to Uvi 🎵</h1>
+    <div class="player">
+      <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Cover" />
+      <h2>Never Gonna Give You Up</h2>
+      <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" controls style="width: 80%; margin-top: 10px;"></audio>
+    </div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const loginPage = document.getElementById("loginPage");
+    const signupPage = document.getElementById("signupPage");
+    const playerPage = document.getElementById("playerPage");
+
+    // Navigation
+    function showLogin() {
+      signupPage.classList.remove("active");
+      loginPage.classList.add("active");
+    }
+
+    function showSignup() {
+      loginPage.classList.remove("active");
+      signupPage.classList.add("active");
+    }
+
+    // Sign Up
+    function signup() {
+      const name = document.getElementById("signupName").value.trim();
+      const pass = document.getElementById("signupPass").value.trim();
+      if (!name || !pass) return alert("Please fill all fields");
+
+      localStorage.setItem("uviUser", JSON.stringify({ name, pass }));
+      alert("Signup successful! Please login.");
+      showLogin();
+    }
+
+    // Login
+    function login() {
+      const name = document.getElementById("loginName").value.trim();
+      const pass = document.getElementById("loginPass").value.trim();
+      const user = JSON.parse(localStorage.getItem("uviUser"));
+
+      if (user && user.name === name && user.pass === pass) {
+        loginPage.classList.remove("active");
+        playerPage.classList.add("active");
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    function logout() {
+      playerPage.classList.remove("active");
+      loginPage.classList.add("active");
+    }
+
+    // On Load
+    showLogin();
+  </script>
+
 </body>
 </html>
