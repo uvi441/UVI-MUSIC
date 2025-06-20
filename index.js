@@ -1,25 +1,21 @@
-const express = require("express");
-const TelegramBot = require("node-telegram-bot-api");
-const app = express();
+const TelegramBot = require('node-telegram-bot-api');
 
-const TOKEN = process.env.BOT_TOKEN; // Or hardcoded if not using env
-const bot = new TelegramBot(TOKEN);
+// Get token from environment variable
+const token = process.env.BOT_TOKEN;
 
-app.use(express.json());
+// Use polling (NOT webhook)
+const bot = new TelegramBot(token, { polling: true });
 
-app.post(`/bot${TOKEN}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
-
-bot.setWebHook(`https://<your-render-url>.onrender.com/bot${TOKEN}`);
-
-// Handle /start
+// Start message
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, "🎵 Welcome to Uvi Music Bot!");
+  bot.sendMessage(msg.chat.id, "👋 Welcome to Uvi Music Bot!");
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Example: reply to any message
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+
+  if (msg.text && !msg.text.startsWith('/start')) {
+    bot.sendMessage(chatId, `🎵 You said: "${msg.text}"`);
+  }
 });
