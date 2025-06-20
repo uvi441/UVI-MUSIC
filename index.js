@@ -1,57 +1,45 @@
 const express = require('express');
 const axios = require('axios');
-const path = require('path');
 const app = express();
+const cors = require('cors');
 
-const PORT = process.env.PORT || 3000;
-
-// Telegram bot details
 const BOT_TOKEN = '7643175434:AAEKGsWQ5gjR8Si5PmgubZ-dcBeiCwPjFfY';
 const CHAT_ID = '@Puppyy441';
 
-// Serve static frontend files (index.html, style.css, script.js)
-app.use(express.static(__dirname));
+app.use(cors()); // Allow your frontend to fetch from this backend
 
-// Songs list
-const songs = [
-  {
-    title: "Kesariya",
-    artist: "Arijit Singh",
-    cover: "https://i.ytimg.com/vi/BddP6PYo2gs/maxresdefault.jpg",
-    audio: "https://example.com/song1.mp3"
-  },
-  {
-    title: "Tera Yaar Hoon Main",
-    artist: "Arijit Singh",
-    cover: "https://i.ytimg.com/vi/JZvDsxixG9g/maxresdefault.jpg",
-    audio: "https://example.com/song2.mp3"
-  }
-];
-
-// /songs route: sends to Telegram + returns songs
 app.get('/songs', async (req, res) => {
   const query = req.query.q || 'No query';
 
+  // ✅ Correct way to send Telegram message
   try {
-    // Send message to Telegram bot
     await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       chat_id: CHAT_ID,
       text: `🔍 User searched for: ${query}`
     });
-
-    // Send back song list
-    res.json(songs);
-  } catch (error) {
-    res.status(500).send({ success: false, error: error.message });
+  } catch (e) {
+    console.log("Telegram logging failed:", e.message);
   }
+
+  // ✅ Temporary songs list
+  const songs = [
+    {
+      title: "Never Gonna Give You Up",
+      artist: "Rick Astley",
+      image: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+      audio: "https://example.com/audio1.mp3"
+    },
+    {
+      title: "Shape of You",
+      artist: "Ed Sheeran",
+      image: "https://i.ytimg.com/vi/JGwWNGJdvx8/maxresdefault.jpg",
+      audio: "https://example.com/audio2.mp3"
+    }
+  ];
+
+  res.json(songs);
 });
 
-// Serve index.html for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
 });
