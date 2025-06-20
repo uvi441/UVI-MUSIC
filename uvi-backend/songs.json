@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Alag Aasmaan",
+    "url": "https://example.com/aa.mp3",
+    "thumbnail": "https://example.com/thumb.jpg"
+  },
+  {
+    "title": "Tum Mile",
+    "url": "https://example.com/tum-mile.mp3",
+    "thumbnail": "https://example.com/tum.jpg"
+  }
+]
