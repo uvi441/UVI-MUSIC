@@ -1,7 +1,25 @@
-[
-  {
-    "title": "Demo Song",
-    "url": "https://example.com/song.mp3",
-    "thumbnail": "https://example.com/thumb.jpg"
+const SONGS_API = 'https://your-backend-name.onrender.com/songs'; // 👈 ye URL apne backend ka daalo
+
+async function loadSongs() {
+  try {
+    const res = await fetch(SONGS_API);
+    const songs = await res.json();
+    
+    // Clear existing songs
+    document.getElementById('song-list').innerHTML = '';
+
+    // Loop songs & render cards
+    songs.forEach(song => {
+      const card = document.createElement('div');
+      card.className = 'song-card';
+      card.innerHTML = `
+        <img src="${song.thumbnail}" alt="${song.title}">
+        <h3>${song.title}</h3>
+        <audio controls src="${song.url}"></audio>
+      `;
+      document.getElementById('song-list').appendChild(card);
+    });
+  } catch (err) {
+    console.error('Error loading songs:', err);
   }
-]
+  }
