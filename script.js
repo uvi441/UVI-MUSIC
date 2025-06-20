@@ -1,104 +1,112 @@
-const songs = [
-  {
-    title: "Jhoome Jo Pathaan",
-    artist: "Arijit Singh",
-    cover: "https://i.ytimg.com/vi/hHuG7FIKgtc/maxresdefault.jpg",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-  },
-  {
-    title: "Calm Down",
-    artist: "Rema",
-    cover: "https://i.ytimg.com/vi/JgDNFQ2RaLQ/maxresdefault.jpg",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-  },
-  {
-    title: "Mockingbird",
-    artist: "Eminem",
-    cover: "https://i.ytimg.com/vi/YVkUvmDQ3HY/maxresdefault.jpg",
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+const songList = document.getElementById('song-list');
+const nowPlaying = document.getElementById('now-playing');
+const nowPlayingTitle = document.getElementById('now-playing-title');
+const nowPlayingArtist = document.getElementById('now-playing-artist');
+const nowPlayingImage = document.getElementById('now-playing-image');
+const nowPlayingAudio = document.getElementById('now-playing-audio');
+const backButton = document.getElementById('back-button');
+const likeBtn = document.getElementById('like-btn');
+const filterTabs = document.querySelectorAll('.filter-tab');
+
+let allSongs = [];
+let likedSongs = JSON.parse(localStorage.getItem('likedSongs') || '[]');
+let currentSong = null;
+
+// Fetch songs from backend
+fetch('https://uvi-music-1.onrender.com/songs')
+  .then(res => res.json())
+  .then(songs => {
+    allSongs = songs;
+    renderSongs(songs);
+  });
+
+// Render song cards
+function renderSongs(songs) {
+  songList.innerHTML = '';
+
+  if (songs.length === 0) {
+    songList.innerHTML = '<p class="text-center w-full text-gray-400">No songs found</p>';
+    return;
   }
-];
 
-const audio = document.getElementById('audio');
-const cover = document.getElementById('cover');
-const title = document.getElementById('title');
-const artist = document.getElementById('artist');
-const progress = document.getElementById('progress');
-const playBtn = document.getElementById('playBtn');
-const songList = document.getElementById('songList');
-const searchInput = document.getElementById('searchInput');
-
-let currentIndex = 0;
-
-function renderSongs() {
-  songList.innerHTML = "";
-  songs.forEach((song, index) => {
-    const card = document.createElement('div');
-    card.className = 'song-card';
-    card.innerHTML = `
-      <img src="${song.cover}" />
-      <h3>${song.title}</h3>
-      <p>${song.artist}</p>
+  songs.forEach(song => {
+    const isLiked = likedSongs.includes(song.title);
+    const songCard = document.createElement('div');
+    songCard.className = 'bg-white dark:bg-gray-800 rounded-2xl shadow p-3 flex items-center gap-3 w-full cursor-pointer';
+    songCard.innerHTML = `
+      <img src="${song.image}" alt="${song.title}" class="w-14 h-14 rounded-xl object-cover" />
+      <div class="flex-1">
+        <h3 class="text-sm font-semibold">${song.title}</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400">${song.artist}</p>
+      </div>
+      <button class="like-toggle text-xl ${isLiked ? 'text-pink-500' : 'text-gray-400'}">♥</button>
     `;
-    card.onclick = () => loadSong(index);
-    songList.appendChild(card);
+
+    // Play song on click
+    songCard.addEventListener('click', (e) => {
+      if (e.target.classList.contains('like-toggle')) return;
+      playSong(song);
+    });
+
+    // Like button
+    songCard.querySelector('.like-toggle').addEventListener('click', () => {
+      toggleLike(song.title);
+      renderSongs(getFilteredSongs());
+    });
+
+    songList.appendChild(songCard);
   });
 }
 
-function filterSongs() {
-  const query = searchInput.value.toLowerCase();
-  const cards = document.querySelectorAll('.song-card');
-  songs.forEach((song, index) => {
-    const match = song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query);
-    cards[index].style.display = match ? 'block' : 'none';
-  });
+// Play song in full player
+function playSong(song) {
+  currentSong = song;
+  nowPlayingTitle.textContent = song.title;
+  nowPlayingArtist.textContent = song.artist;
+  nowPlayingImage.src = song.image;
+  nowPlayingAudio.src = song.audio;
+  nowPlayingAudio.play();
+  nowPlaying.classList.remove('hidden');
+
+  likeBtn.classList.toggle('text-pink-500', likedSongs.includes(song.title));
+  likeBtn.classList.toggle('text-gray-400', !likedSongs.includes(song.title));
 }
 
-function loadSong(index) {
-  const song = songs[index];
-  currentIndex = index;
-  title.textContent = song.title;
-  artist.textContent = song.artist;
-  cover.src = song.cover;
-  audio.src = song.src;
-  audio.play();
-  playBtn.textContent = '⏸';
-}
+// Hide now playing
+backButton.addEventListener('click', () => {
+  nowPlaying.classList.add('hidden');
+  nowPlayingAudio.pause();
+});
 
-function togglePlay() {
-  if (audio.paused) {
-    audio.play();
-    playBtn.textContent = '⏸';
+// Like button in full player
+likeBtn.addEventListener('click', () => {
+  if (!currentSong) return;
+  toggleLike(currentSong.title);
+  likeBtn.classList.toggle('text-pink-500', likedSongs.includes(currentSong.title));
+  likeBtn.classList.toggle('text-gray-400', !likedSongs.includes(currentSong.title));
+  renderSongs(getFilteredSongs());
+});
+
+// Toggle like
+function toggleLike(title) {
+  if (likedSongs.includes(title)) {
+    likedSongs = likedSongs.filter(t => t !== title);
   } else {
-    audio.pause();
-    playBtn.textContent = '▶️';
+    likedSongs.push(title);
   }
+  localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
 }
 
-function prevSong() {
-  currentIndex = (currentIndex - 1 + songs.length) % songs.length;
-  loadSong(currentIndex);
+// Filter tabs (All / Liked)
+filterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelector('.filter-tab.active').classList.remove('active');
+    tab.classList.add('active');
+    renderSongs(getFilteredSongs());
+  });
+});
+
+function getFilteredSongs() {
+  const activeTab = document.querySelector('.filter-tab.active');
+  return activeTab.id === 'tab-liked' ? allSongs.filter(song => likedSongs.includes(song.title)) : allSongs;
 }
-
-function nextSong() {
-  currentIndex = (currentIndex + 1) % songs.length;
-  loadSong(currentIndex);
-}
-
-audio.ontimeupdate = () => {
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = percent + '%';
-};
-
-function seek(e) {
-  const bar = e.currentTarget;
-  const percent = e.offsetX / bar.offsetWidth;
-  audio.currentTime = percent * audio.duration;
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('light');
-}
-
-renderSongs();
-loadSong(0);
