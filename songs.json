@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "title": "Demo Song",
+    "url": "https://example.com/song.mp3",
+    "thumbnail": "https://example.com/thumb.jpg"
+  }
+]
