@@ -1,36 +1,46 @@
-// index.js
-const TelegramBot = require('node-telegram-bot-api');
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
+const TelegramBot = require("node-telegram-bot-api");
+const fs = require("fs");
+const express = require("express");
+const cors = require("cors");
 
-// ✅ Replace with your new token
-const token = '8010449761:AAGVTLG3OwPL6LNwDum2b7DV2yk2Nm3vAs4';
-
-// ✅ Create bot with polling ON
+const token = process.env.BOT_TOKEN; // ✅ Safe & clean
 const bot = new TelegramBot(token, { polling: true });
 
-// ✅ Sample response
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, '🎵 Welcome to Uvi Music Bot! Send me a song name to get started.');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+let songs = [];
+
+try {
+  songs = JSON.parse(fs.readFileSync("songs.json"));
+} catch (e) {
+  songs = [];
+}
+
+app.use(cors());
+
+app.get("/songs", (req, res) => {
+  res.json(songs);
 });
 
-// ✅ Song search (replace this with real logic later)
-bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-  const text = msg.text?.toLowerCase();
+bot.on("message", async (msg) => {
+  if (msg.audio) {
+    const fileId = msg.audio.file_id;
+    const title = msg.audio.title || msg.audio.file_name || "Unknown Title";
 
-  if (text && text !== '/start') {
-    bot.sendMessage(chatId, `🔍 Searching for: "${text}"...`);
-    // Add your logic here to return song file or URL
+    const song = {
+      title: title,
+      fileId: fileId,
+    };
+
+    songs.unshift(song);
+    fs.writeFileSync("songs.json", JSON.stringify(songs, null, 2));
+    bot.sendMessage(msg.chat.id, `✅ "${title}" saved to Uvi songs.`);
+  } else if (msg.text === "/start") {
+    bot.sendMessage(msg.chat.id, "🎵 Welcome to Uvi Music Bot!");
   }
 });
 
-// ✅ Keep app alive
-app.get('/', (req, res) => {
-  res.send('Uvi Bot is running...');
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
