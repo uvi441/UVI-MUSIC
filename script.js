@@ -1,4 +1,6 @@
-// Firebase Config
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDYJFmTyC0bg88stR33nBlhaZPz5ENtoCE",
   authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
@@ -9,20 +11,31 @@ const firebaseConfig = {
   appId: "1:90541572237:web:6f59215375cab9e545a2c4"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const songRef = ref(db, 'songs');
 
-// Songs Fetcher
-function loadSongsFromFirebase() {
-  db.ref("songs").once("value", (snapshot) => {
-    const songs = snapshot.val();
-    if (songs) {
-      Object.values(songs).forEach(song => {
-        addSongToUI(song); // Tumhara UI card wala function
-      });
-    }
+const container = document.getElementById("song-container"); // set this in your HTML
+
+onValue(songRef, (snapshot) => {
+  container.innerHTML = "";
+  snapshot.forEach((child) => {
+    const song = child.val();
+    const card = document.createElement("div");
+    card.className = "song-card";
+    card.innerHTML = `
+      <img src="${song.thumbnail}" class="cover" />
+      <div class="info">
+        <h4>${song.title}</h4>
+        <p>${song.category}</p>
+      </div>
+    `;
+    card.addEventListener("click", () => {
+      document.getElementById("main-audio").src = song.audio_url;
+      document.getElementById("now-title").innerText = song.title;
+      document.querySelector(".now-playing").style.display = "block";
+      document.getElementById("main-audio").play();
+    });
+    container.appendChild(card);
   });
-}
-
-window.addEventListener("load", loadSongsFromFirebase);
+});
