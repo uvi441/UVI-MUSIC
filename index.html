@@ -90,6 +90,7 @@
       gap: 1rem;
       align-items: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
     }
 
     .song-card img {
@@ -162,8 +163,8 @@
     <input type="text" placeholder="Search songs..." id="search">
 
     <div class="filter-tabs">
-      <button class="active" onclick="filterSongs('all')">All</button>
-      <button onclick="filterSongs('liked')">Liked</button>
+      <button class="active" onclick="filterSongs('all', event)">All</button>
+      <button onclick="filterSongs('liked', event)">Liked</button>
     </div>
 
     <div id="song-list"></div>
@@ -185,7 +186,7 @@
       messagingSenderId: "90541572237",
       appId: "1:90541572237:web:6f59215375cab9e545a2c4"
     };
-    
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -199,13 +200,13 @@
 
     function createCard(song, id) {
       return `
-        <div class="song-card" data-title="${song.title}" data-id="${id}">
+        <div class="song-card" data-title="${song.title}" data-id="${id}" onclick="playSong('${song.audio_url}', '${song.title}', '${song.thumbnail}')">
           <img src="${song.thumbnail}" alt="cover" />
           <div class="song-info">
             <h4>${song.title}</h4>
             <p>${song.artist || 'Unknown'}</p>
           </div>
-          <div class="like" onclick="toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
+          <div class="like" onclick="event.stopPropagation(); toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
         </div>
       `;
     }
@@ -221,7 +222,7 @@
       });
     }
 
-    function filterSongs(category) {
+    function filterSongs(category, event) {
       document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
 
@@ -246,6 +247,12 @@
         card.style.display = title.includes(query) ? "flex" : "none";
       });
     };
+
+    function playSong(url, title, thumb) {
+      const audio = new Audio(url);
+      audio.play();
+      alert("Now Playing: " + title);
+    }
 
     window.onload = () => {
       loadSongs();
