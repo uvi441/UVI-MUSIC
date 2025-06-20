@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Uvi Music App</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -17,7 +16,6 @@
       --card: #f3f7ff;
       --border: #dce5f2;
     }
-
     body.dark {
       --bg: #111111;
       --text: #ffffff;
@@ -25,15 +23,11 @@
       --card: #1a1a1a;
       --border: #333;
     }
-
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       font-family: 'Inter', sans-serif;
       transition: background 0.3s, color 0.3s;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -42,7 +36,6 @@
       height: 100dvh;
       overflow: hidden;
     }
-
     header {
       padding: 1rem;
       font-size: 1.5rem;
@@ -53,20 +46,17 @@
       justify-content: space-between;
       align-items: center;
     }
-
     #main {
       flex: 1;
       overflow-y: auto;
       padding: 1rem;
     }
-
     .filter-tabs {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
-
     .filter-tabs button {
       padding: 0.5rem 1rem;
       border-radius: 999px;
@@ -75,12 +65,10 @@
       cursor: pointer;
       font-size: 0.9rem;
     }
-
     .filter-tabs button.active {
       background: var(--primary);
       color: #fff;
     }
-
     .song-card {
       background: var(--card);
       border-radius: 12px;
@@ -92,38 +80,30 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       cursor: pointer;
     }
-
     .song-card img {
-      width: 64px;
-      height: 64px;
+      width: 64px; height: 64px;
       border-radius: 8px;
       object-fit: cover;
     }
-
     .song-info {
       flex: 1;
     }
-
     .song-info h4 {
       font-size: 1rem;
       margin-bottom: 0.25rem;
     }
-
     .song-info p {
       font-size: 0.875rem;
       color: var(--subtext);
     }
-
     .like {
       font-size: 1.4rem;
       cursor: pointer;
       transition: transform 0.2s;
     }
-
     .like:hover {
       transform: scale(1.2);
     }
-
     .bottom-nav {
       display: flex;
       justify-content: space-around;
@@ -131,7 +111,6 @@
       background: var(--card);
       border-top: 1px solid var(--border);
     }
-
     .bottom-nav button {
       background: none;
       border: none;
@@ -139,7 +118,6 @@
       color: var(--text);
       cursor: pointer;
     }
-
     #search {
       width: 100%;
       padding: 0.5rem;
@@ -149,6 +127,50 @@
       font-size: 1rem;
       background: var(--card);
       color: var(--text);
+    }
+    #nowPlayingScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1rem;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    #nowPlayingScreen img {
+      width: 200px;
+      height: 200px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+    #nowPlayingTitle {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    #nowPlayingArtist {
+      font-size: 1rem;
+      color: var(--subtext);
+      margin-bottom: 1rem;
+    }
+    #nowPlayingScreen button {
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #audioPlayer {
+      width: 100%;
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -161,19 +183,26 @@
 
   <div id="main">
     <input type="text" placeholder="Search songs..." id="search">
-
     <div class="filter-tabs">
-      <button class="active" onclick="filterSongs('all', event)">All</button>
-      <button onclick="filterSongs('liked', event)">Liked</button>
+      <button class="active" onclick="filterSongs('all')">All</button>
+      <button onclick="filterSongs('liked')">Liked</button>
     </div>
-
     <div id="song-list"></div>
   </div>
 
   <div class="bottom-nav">
-    <button onclick="alert('For You coming soon')">For You</button>
+    <button onclick="document.getElementById('main').scrollIntoView({ behavior: 'smooth' })">For You</button>
     <button onclick="alert('Playlists coming soon')">Playlists</button>
     <button onclick="alert('Library coming soon')">Library</button>
+  </div>
+
+  <!-- Now Playing Screen -->
+  <div id="nowPlayingScreen">
+    <button onclick="document.getElementById('nowPlayingScreen').style.display='none'">⬅ Back</button>
+    <img id="nowPlayingCover" src="" alt="Cover"/>
+    <div id="nowPlayingTitle">Title</div>
+    <div id="nowPlayingArtist">Artist</div>
+    <audio id="audioPlayer" controls autoplay></audio>
   </div>
 
   <script>
@@ -189,7 +218,6 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     const likedSongs = JSON.parse(localStorage.getItem('uvi-liked') || '{}');
 
     function toggleLike(el, id) {
@@ -199,16 +227,22 @@
     }
 
     function createCard(song, id) {
-      return `
-        <div class="song-card" data-title="${song.title}" data-id="${id}" onclick="playSong('${song.audio_url}', '${song.title}', '${song.thumbnail}')">
-          <img src="${song.thumbnail}" alt="cover" />
-          <div class="song-info">
-            <h4>${song.title}</h4>
-            <p>${song.artist || 'Unknown'}</p>
-          </div>
-          <div class="like" onclick="event.stopPropagation(); toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
+      const card = document.createElement('div');
+      card.className = 'song-card';
+      card.dataset.title = song.title;
+      card.dataset.id = id;
+      card.innerHTML = `
+        <img src="${song.thumbnail}" alt="cover" />
+        <div class="song-info">
+          <h4>${song.title}</h4>
+          <p>${song.artist || 'Unknown'}</p>
         </div>
+        <div class="like" onclick="toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
       `;
+      card.onclick = () => {
+        loadAndPlaySong(song);
+      };
+      return card;
     }
 
     function loadSongs() {
@@ -217,15 +251,14 @@
         const list = document.getElementById("song-list");
         list.innerHTML = "";
         for (let id in songs) {
-          list.innerHTML += createCard(songs[id], id);
+          list.appendChild(createCard(songs[id], id));
         }
       });
     }
 
-    function filterSongs(category, event) {
+    function filterSongs(category) {
       document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
-
       document.querySelectorAll(".song-card").forEach(card => {
         const id = card.dataset.id;
         if (category === "all") {
@@ -248,16 +281,17 @@
       });
     };
 
-    function playSong(url, title, thumb) {
-      const audio = new Audio(url);
-      audio.play();
-      alert("Now Playing: " + title);
+    function loadAndPlaySong(song) {
+      document.getElementById("nowPlayingTitle").textContent = song.title || "Unknown";
+      document.getElementById("nowPlayingArtist").textContent = song.artist || "Unknown Artist";
+      document.getElementById("nowPlayingCover").src = song.thumbnail || "default.jpg";
+      document.getElementById("audioPlayer").src = song.audio_url;
+      document.getElementById("nowPlayingScreen").style.display = "flex";
     }
 
     window.onload = () => {
       loadSongs();
-    }
+    };
   </script>
 </body>
-
 </html>
