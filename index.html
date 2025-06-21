@@ -1,387 +1,201 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Uvi Music App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #4aa5ff;
-      --bg: #111;
-      --text: #fff;
-      --subtext: #bbb;
-      --card: #2a2a2a;
-      --border: #333;
-      --accent: #ff8f8f;
-    }
-
-    body.dark {
-      --bg: #111;
-      --text: #fff;
-      --subtext: #bbb;
-      --card: #1a1a1a;
-      --border: #333;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #splash {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--primary);
-      animation: fadeOut 1s ease 2s forwards;
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-
-    header {
-      padding: 1rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-tabs button {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      background: var(--border);
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s ease;
-    }
-
-    .filter-tabs button.active {
-      background: var(--primary);
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
       color: #fff;
-    }
+    }header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    .song-card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+h1 {
+  font-size: 1.8rem;
+  color: #fff;
+}
 
-    .song-card:hover {
-      transform: scale(1.05);
-    }
+#theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #fff;
+}
 
-    .song-card img {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
 
-    .song-info {
-      flex: 1;
-    }
+.tab {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  margin: 0 0.5rem;
+  border-radius: 2rem;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
 
-    .song-info h4 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
+.tab.active {
+  background: #fff;
+  color: #0072ff;
+}
 
-    .song-info p {
-      font-size: 0.875rem;
-      color: var(--subtext);
-    }
+#search {
+  width: 90%;
+  display: block;
+  margin: 0 auto 1rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .like {
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
+.songs-container {
+  display: grid;
+  gap: 1rem;
+  padding: 0 1rem;
+}
 
-    #search {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-      transition: all 0.3s ease;
-    }
+.song-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease;
+}
 
-    #search:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
+.song-card:hover {
+  transform: scale(1.02);
+}
 
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 0.75rem 0;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      transition: background 0.3s ease;
-    }
+.song-card img {
+  width: 60px;
+  height: 60px;
+  border-radius: 0.75rem;
+  margin-right: 1rem;
+}
 
-    .bottom-nav button {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: var(--text);
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
+.mini-player, .full-player {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  color: #fff;
+}
 
-    .bottom-nav button:hover {
-      color: var(--primary);
-    }
+.mini-player img, .full-player img {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.5rem;
+}
 
-    #mini-player {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem 1rem;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      font-size: 0.9rem;
-      position: fixed;
-      inset: 0;
-      bottom: 0;
-      z-index: 999;
-    }
+.mini-info {
+  flex-grow: 1;
+  padding: 0 1rem;
+}
 
-    #mini-player img {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-    }
+.mini-controls button, .controls button {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #fff;
+}
 
-    #now-playing {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      display: none;
-      flex-direction: column;
-      padding: 2rem 1rem;
-      z-index: 1000;
-      text-align: center;
-      color: var(--text);
-    }
+.full-player {
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem 1rem;
+}
 
-    #now-playing img {
-      width: 200px;
-      height: 200px;
-      margin: auto;
-      border-radius: 16px;
-    }
+.full-player.hidden {
+  display: none;
+}
 
-    #now-playing h3 {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-    }
+#back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: #fff;
+  color: #0072ff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+}
 
-    #now-playing p {
-      color: var(--subtext);
-    }
+#full-title {
+  margin: 1rem 0;
+  font-size: 1.5rem;
+}
 
-    #now-playing .controls {
-      margin-top: 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      font-size: 2rem;
-    }
   </style>
-</head>
+</head><body>
+  <div id="splash-screen">
+    <div class="logo">Uvi</div>
+  </div>  <div class="app">
+    <header>
+      <h1>Uvi</h1>
+      <button id="theme-toggle">🌓</button>
+    </header><div class="tabs">
+  <button class="tab active" data-category="all">All</button>
+  <button class="tab" data-category="liked">Liked</button>
+</div>
 
-<body>
-  <div id="splash">Uvi</div>
-  <header>
-    Uvi <button onclick="toggleTheme()">🌓</button>
-  </header>
+<input type="text" id="search" placeholder="Search songs..." />
 
-  <div id="main">
-    <input type="text" placeholder="Search songs..." id="search">
-    <div class="filter-tabs">
-      <button class="active" onclick="filterSongs('all')">All</button>
-      <button onclick="filterSongs('liked')">Liked</button>
-    </div>
-    <div id="song-list"></div>
+<div id="songs-container" class="songs-container"></div>
+
+<div id="mini-player" class="mini-player">
+  <img id="mini-thumbnail" src="" alt="" />
+  <div class="mini-info">
+    <p id="mini-title"></p>
   </div>
-
-  <div id="mini-player">
-    <img id="mini-thumb" />
-    <div id="mini-title">Title</div>
-    <button onclick="togglePlayback()" id="mini-play">⏸️</button>
+  <div class="mini-controls">
+    <button id="mini-prev">⏮️</button>
+    <button id="mini-play">▶️</button>
+    <button id="mini-next">⏭️</button>
   </div>
+</div>
 
-  <div class="bottom-nav">
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">For You</button>
-    <button onclick="alert('Playlists coming soon')">Playlists</button>
-    <button onclick="alert('Library coming soon')">Library</button>
+<div id="full-player" class="full-player hidden">
+  <button id="back-button">←</button>
+  <img id="full-thumbnail" src="" alt="" />
+  <h2 id="full-title"></h2>
+  <audio id="audio" controls></audio>
+  <div class="controls">
+    <button id="prev">⏮️</button>
+    <button id="play">▶️</button>
+    <button id="next">⏭️</button>
+    <button id="like">❤️</button>
   </div>
+</div>
 
-  <div id="now-playing">
-    <button onclick="document.getElementById('now-playing').style.display='none'">🔙</button>
-    <img id="now-thumb">
-    <h3 id="now-title">Title</h3>
-    <p id="now-artist">Artist</p>
-    <div class="controls">
-      <button onclick="togglePlayback()" id="now-play">⏸️</button>
-    </div>
-  </div>
-
-  <audio id="audio" onended="onSongEnd()"></audio>
-
-  <script>
-    const config = {
-      apiKey: "YOUR_FIREBASE_API_KEY",
-      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-      databaseURL: "YOUR_FIREBASE_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(config);
-    const db = firebase.database();
-    const audio = document.getElementById('audio');
-
-    const likedSongs = JSON.parse(localStorage.getItem('uvi-liked') || '{}');
-    let currentSong = null;
-
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-    }
-
-    function toggleLike(el, id) {
-      likedSongs[id] = !likedSongs[id];
-      el.textContent = likedSongs[id] ? "💙" : "🤍";
-      localStorage.setItem('uvi-liked', JSON.stringify(likedSongs));
-    }
-
-    function filterSongs(cat) {
-      document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      document.querySelectorAll('.song-card').forEach(card => {
-        const id = card.dataset.id;
-        if (cat === 'all') card.style.display = 'flex';
-        else card.style.display = likedSongs[id] ? 'flex' : 'none';
-      });
-    }
-
-    function togglePlayback() {
-      if (audio.paused) audio.play();
-      else audio.pause();
-      document.getElementById('mini-play').textContent = audio.paused ? '▶️' : '⏸️';
-      document.getElementById('now-play').textContent = audio.paused ? '▶️' : '⏸️';
-    }
-
-    function onSongEnd() {
-      document.getElementById('mini-player').style.display = 'none';
-    }
-
-    function playSong(song) {
-      currentSong = song;
-      audio.src = song.audio_url;
-      audio.play();
-
-      document.getElementById('mini-player').style.display = 'flex';
-      document.getElementById('mini-thumb').src = song.thumbnail;
-      document.getElementById('mini-title').textContent = song.title;
-
-      document.getElementById('now-thumb').src = song.thumbnail;
-      document.getElementById('now-title').textContent = song.title;
-      document.getElementById('now-artist').textContent = song.artist || 'Unknown';
-      document.getElementById('now-playing').style.display = 'flex';
-    }
-
-    function createCard(song, id) {
-      return `<div class="song-card" data-id="${id}" data-title="${song.title}" onclick='playSong(${JSON.stringify(song)})'>
-        <img src="${song.thumbnail}" />
-        <div class="song-info">
-          <h4>${song.title}</h4>
-          <p>${song.artist || 'Unknown'}</p>
-        </div>
-        <div class="like" onclick="event.stopPropagation();toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
-      </div>`;
-    }
-
-    function loadSongs() {
-      db.ref("songs").once("value", snapshot => {
-        const songs = snapshot.val();
-        const list = document.getElementById("song-list");
-        list.innerHTML = "";
-        for (let id in songs) {
-          list.innerHTML += createCard(songs[id], id);
-        }
-      });
-    }
-
-    document.getElementById("search").oninput = function (e) {
-      const q = e.target.value.toLowerCase();
-      document.querySelectorAll(".song-card").forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        card.style.display = title.includes(q) ? "flex" : "none";
-      });
-    };
-
-    window.onload = () => {
-      loadSongs();
-      setTimeout(() => document.getElementById('splash').style.display = 'none', 2500);
-    };
-  </script>
-</body>
-
-</html>
+  </div>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>  <script src="script.js"></script></body></html> 
