@@ -1,137 +1,194 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Uvi Music</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uvi Vibe Player</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff6a6a, #fbc7d4);
-      color: #000;
-      overflow-x: hidden;
-    }
-
-    .header {
-      padding: 24px;
-      font-size: 28px;
-      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      background: #0b0c10;
       color: white;
-      border-bottom-right-radius: 30px;
-      border-bottom-left-radius: 30px;
-      background: linear-gradient(135deg, #ff4b2b, #ff416c);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
+    }.container {
+  padding: 16px;
+}
 
-    .song-list {
-      margin: 16px;
-      background: white;
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    }
+.heading {
+  font-size: 28px;
+  font-weight: 700;
+}
 
-    .song-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 16px;
-    }
+.tabs {
+  display: flex;
+  margin-top: 8px;
+  gap: 16px;
+}
 
-    .song-item:last-child {
-      border-bottom: none;
-    }
+.tab {
+  font-weight: bold;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
 
-    .thumbnail {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      margin-right: 16px;
-      object-fit: cover;
-      background: #f0f0f0;
-    }
+.tab.active, .tab:hover {
+  background-color: #1f1f1f;
+  color: #ff5722;
+}
 
-    .info {
-      flex: 1;
-    }
+.card-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin-top: 12px;
+}
 
-    .title {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0;
-    }
+.card {
+  background: #1b1c22;
+  border-radius: 16px;
+  overflow: hidden;
+  min-width: 140px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
 
-    .artist {
-      font-size: 14px;
-      color: #666;
-      margin: 4px 0 0 0;
-    }
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-    .mini-player {
-      position: fixed;
-      bottom: 16px;
-      left: 16px;
-      right: 16px;
-      background: black;
-      color: white;
-      padding: 12px 16px;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
+.card-title {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    .mini-player .info {
-      flex: 1;
-    }
+.player {
+  padding: 16px;
+  background: #111217;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
-    .mini-player .title {
-      color: white;
-      font-size: 16px;
-      font-weight: 500;
-    }
+.player img {
+  width: 100%;
+  border-radius: 16px;
+}
 
-    .mini-player .artist {
-      color: #ccc;
-      font-size: 14px;
-    }
+.song-info {
+  margin: 12px 0;
+  text-align: center;
+}
 
-    .mini-player .thumbnail {
-      width: 48px;
-      height: 48px;
-      margin-right: 12px;
-    }
+.song-info .title {
+  font-size: 18px;
+  font-weight: 600;
+}
 
-    .mini-player button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      margin-left: 12px;
-      cursor: pointer;
-    }
+.song-info .artist {
+  color: #bbb;
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.progress {
+  width: 100%;
+  margin: 12px 0;
+}
+
+.progress input[type="range"] {
+  width: 100%;
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  background: #0e0f14;
+  border-top: 1px solid #1f1f1f;
+}
+
+.bottom-nav i {
+  font-size: 22px;
+  color: #777;
+}
+
+.bottom-nav .active {
+  color: #ff5722;
+}
+
   </style>
 </head>
 <body>
-  <div class="header">Discover</div>
+  <div class="container">
+    <div class="heading">DANNY AVILLA ALBUMES</div><div class="tabs">
+  <div class="tab active">For You</div>
+  <div class="tab">Trending</div>
+</div>
 
-  <div class="song-list" id="song-list">
-    <!-- Songs will be loaded here via script.js -->
+<div class="card-row">
+  <div class="card">
+    <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+    <div class="card-title">The Captain</div>
   </div>
-
-  <div class="mini-player" id="mini-player" style="display: none;">
-    <img src="" class="thumbnail" id="mini-thumb" />
-    <div class="info">
-      <div class="title" id="mini-title">Title</div>
-      <div class="artist" id="mini-artist">Artist</div>
-    </div>
-    <button id="play-pause">▶</button>
+  <div class="card">
+    <img src="https://i.ibb.co/xMKxQZ3/dont-know-why.jpg" alt="cover" />
+    <div class="card-title">I Don’t Know Why</div>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<div class="heading" style="margin-top: 24px">Recently Played</div>
+<div class="card-row">
+  <div class="card">
+    <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+    <div class="card-title">Man on the Moon</div>
+  </div>
+</div>
+
+  </div>  <div class="player">
+    <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+    <div class="song-info">
+      <div class="title">The Captain</div>
+      <div class="artist">DANNY AVILA</div>
+    </div><div class="progress">
+  <input type="range" min="0" max="100" value="40">
+</div>
+
+<div class="controls">
+  <button>↺</button>
+  <button>⏮</button>
+  <button>⏯</button>
+  <button>⏭</button>
+  <button>↻</button>
+</div>
+
+  </div>  <div class="bottom-nav">
+    <i class="active">🏠</i>
+    <i>🛍️</i>
+    <i>❤️</i>
+    <i>🔔</i>
+  </div>
 </body>
 </html>
