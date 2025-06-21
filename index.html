@@ -1,201 +1,196 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music App</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <title>Uvi Vibe Music</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: 'DM Sans', sans-serif;
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      color: #fff;
-    }header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }body {
+  background: linear-gradient(to bottom right, #ff5f6d, #ffc371);
+  color: #1a1a1a;
+  padding: 20px;
 }
 
-h1 {
-  font-size: 1.8rem;
-  color: #fff;
-}
-
-#theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #fff;
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-}
-
-.tab {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  padding: 0.5rem 1.5rem;
-  margin: 0 0.5rem;
-  border-radius: 2rem;
-  color: #fff;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.tab.active {
+.app {
+  max-width: 400px;
+  margin: 0 auto;
   background: #fff;
-  color: #0072ff;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-#search {
-  width: 90%;
-  display: block;
-  margin: 0 auto 1rem;
-  padding: 0.75rem;
-  border-radius: 1rem;
-  border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+header {
+  background: #ff5f6d;
+  color: white;
+  padding: 20px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
-.songs-container {
-  display: grid;
-  gap: 1rem;
-  padding: 0 1rem;
+header h1 {
+  font-size: 28px;
 }
 
-.song-card {
+.playlist {
+  padding: 20px;
+}
+
+.playlist-item {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  padding: 0.5rem;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s ease;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
-.song-card:hover {
-  transform: scale(1.02);
-}
-
-.song-card img {
-  width: 60px;
-  height: 60px;
-  border-radius: 0.75rem;
-  margin-right: 1rem;
-}
-
-.mini-player, .full-player {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  z-index: 100;
-  color: #fff;
-}
-
-.mini-player img, .full-player img {
+.playlist-item img {
   width: 50px;
   height: 50px;
-  border-radius: 0.5rem;
+  border-radius: 15px;
+  margin-right: 15px;
 }
 
-.mini-info {
-  flex-grow: 1;
-  padding: 0 1rem;
+.playlist-item .info {
+  flex: 1;
 }
 
-.mini-controls button, .controls button {
-  background: none;
-  border: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: #fff;
+.playlist-item .info h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
 }
 
-.full-player {
-  flex-direction: column;
-  text-align: center;
-  padding: 2rem 1rem;
+.playlist-item .info span {
+  color: #666;
+  font-size: 14px;
 }
 
-.full-player.hidden {
-  display: none;
+.mini-player {
+  background: #1a1a1a;
+  color: white;
+  padding: 15px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: #fff;
-  color: #0072ff;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.2rem;
+.mini-player img {
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-#full-title {
-  margin: 1rem 0;
-  font-size: 1.5rem;
+.mini-player .details {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.mini-player .controls {
+  display: flex;
+  gap: 10px;
+}
+
+.mini-player button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+}
+
+.bottom-nav {
+  background: #1a1a1a;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #444;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+}
+
+.now-playing {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.now-playing img.cover {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.now-playing .title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.now-playing .artist {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.waveform {
+  height: 50px;
+  background: linear-gradient(to right, #ff5f6d, #ffc371);
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
   </style>
-</head><body>
-  <div id="splash-screen">
-    <div class="logo">Uvi</div>
-  </div>  <div class="app">
+</head>
+<body>
+  <div class="app">
     <header>
-      <h1>Uvi</h1>
-      <button id="theme-toggle">🌓</button>
-    </header><div class="tabs">
-  <button class="tab active" data-category="all">All</button>
-  <button class="tab" data-category="liked">Liked</button>
-</div>
-
-<input type="text" id="search" placeholder="Search songs..." />
-
-<div id="songs-container" class="songs-container"></div>
-
-<div id="mini-player" class="mini-player">
-  <img id="mini-thumbnail" src="" alt="" />
-  <div class="mini-info">
-    <p id="mini-title"></p>
-  </div>
-  <div class="mini-controls">
-    <button id="mini-prev">⏮️</button>
-    <button id="mini-play">▶️</button>
-    <button id="mini-next">⏭️</button>
-  </div>
-</div>
-
-<div id="full-player" class="full-player hidden">
-  <button id="back-button">←</button>
-  <img id="full-thumbnail" src="" alt="" />
-  <h2 id="full-title"></h2>
-  <audio id="audio" controls></audio>
-  <div class="controls">
-    <button id="prev">⏮️</button>
-    <button id="play">▶️</button>
-    <button id="next">⏭️</button>
-    <button id="like">❤️</button>
-  </div>
-</div>
-
-  </div>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>  <script src="script.js"></script></body></html> 
+      <h1>Discover</h1>
+    </header>
+    <div class="playlist">
+      <div class="playlist-item">
+        <img src="https://i.imgur.com/EZ8FwWQ.jpeg" alt="cover" />
+        <div class="info">
+          <h4>Change</h4>
+          <span>Deftones</span>
+        </div>
+      </div>
+      <div class="playlist-item">
+        <img src="https://i.imgur.com/LKj42qf.jpeg" alt="cover" />
+        <div class="info">
+          <h4>Reptilia</h4>
+          <span>The Strokes</span>
+        </div>
+      </div>
+      <div class="playlist-item">
+        <img src="https://i.imgur.com/hzoV7vG.jpeg" alt="cover" />
+        <div class="info">
+          <h4>Tabu (Original Mix)</h4>
+          <span>ARTBAT</span>
+        </div>
+      </div>
+    </div>
+    <div class="mini-player">
+      <div class="details">
+        <img src="https://i.imgur.com/HbqvYyZ.jpeg" alt="" />
+        <div>
+          <div>Tearing Me Up</div>
+          <small>Bob Moses</small>
+        </div
