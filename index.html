@@ -2,254 +2,71 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <style>
-    :root {
-      --primary: #4aa5ff;
-      --bg: #ffffff;
-      --text: #111111;
-      --subtext: #555;
-      --card: #f3f7ff;
-      --border: #dce5f2;
-    }
-
-    body.dark {
-      --bg: #111111;
-      --text: #ffffff;
-      --subtext: #aaa;
-      --card: #1a1a1a;
-      --border: #333;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      overflow: hidden;
-    }
-
-    header {
-      padding: 1rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-tabs button {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      background: var(--border);
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .filter-tabs button.active {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .song-card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .song-card img {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .song-info {
-      flex: 1;
-    }
-
-    .song-info h4 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .song-info p {
-      font-size: 0.875rem;
-      color: var(--subtext);
-    }
-
-    .like {
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .like:hover {
-      transform: scale(1.2);
-    }
-
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 0.75rem 0;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-    }
-
-    .bottom-nav button {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: var(--text);
-      cursor: pointer;
-    }
-
-    #search {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-      background: var(--card);
-      color: var(--text);
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uvi Music</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <header>
-    Uvi
-    <button onclick="toggleTheme()">🌓</button>
-  </header>
+  <div id="splash-screen">
+    <img src="uvi-logo.gif" alt="Uvi Logo" class="splash-logo" />
+  </div>
 
-  <div id="main">
-    <input type="text" placeholder="Search songs..." id="search">
-
-    <div class="filter-tabs">
-      <button class="active" onclick="filterSongs('all')">All</button>
-      <button onclick="filterSongs('liked')">Liked</button>
+  <div id="app" class="hidden">
+    <!-- Login/signup screen -->
+    <div id="auth-screen" class="screen">
+      <!-- Login form here -->
     </div>
 
-    <div id="song-list"></div>
-  </div>
+    <!-- Main player screen -->
+    <div id="main-screen" class="screen hidden">
+      <nav class="bottom-nav">
+        <button data-tab="for-you">For You</button>
+        <button data-tab="playlists">Playlists</button>
+        <button data-tab="library">Library</button>
+      </nav>
 
-  <div class="bottom-nav">
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">For You</button>
-    <button onclick="alert('Playlists coming soon')">Playlists</button>
-    <button onclick="alert('Library coming soon')">Library</button>
-  </div>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDYJFmTyC0bg88stR33nBlhaZPz5ENtoCE",
-      authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
-      databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com",
-      projectId: "uvi-web-app-8ec1e",
-      storageBucket: "uvi-web-app-8ec1e.appspot.com",
-      messagingSenderId: "90541572237",
-      appId: "1:90541572237:web:6f59215375cab9e545a2c4"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const likedSongs = JSON.parse(localStorage.getItem('uvi-liked') || '{}');
-
-    function toggleLike(el, id) {
-      likedSongs[id] = !likedSongs[id];
-      el.textContent = likedSongs[id] ? "💙" : "🤍";
-      localStorage.setItem('uvi-liked', JSON.stringify(likedSongs));
-    }
-
-    function createCard(song, id) {
-      return `
-        <div class="song-card" data-title="${song.title}" data-id="${id}">
-          <img src="${song.thumbnail}" alt="cover" />
-          <div class="song-info">
-            <h4>${song.title}</h4>
-            <p>${song.artist || 'Unknown'}</p>
-          </div>
-          <div class="like" onclick="toggleLike(this, '${id}')">${likedSongs[id] ? '💙' : '🤍'}</div>
+      <div id="content">
+        <div id="for-you" class="tab active">
+          <!-- Songs will be rendered here -->
         </div>
-      `;
-    }
+        <div id="playlists" class="tab hidden">
+          <!-- Playlist UI here -->
+        </div>
+        <div id="library" class="tab hidden">
+          <!-- Liked songs here -->
+        </div>
+      </div>
 
-    function loadSongs() {
-      db.ref("songs").once("value", snapshot => {
-        const songs = snapshot.val();
-        const list = document.getElementById("song-list");
-        list.innerHTML = "";
-        for (let id in songs) {
-          list.innerHTML += createCard(songs[id], id);
-        }
-      });
-    }
+      <!-- Mini player -->
+      <div id="mini-player" class="hidden">
+        <img id="mini-thumb" src="" />
+        <div>
+          <h4 id="mini-title"></h4>
+        </div>
+        <button id="mini-play">▶️</button>
+      </div>
+    </div>
 
-    function filterSongs(category) {
-      document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+    <!-- Full Player -->
+    <div id="now-playing" class="hidden">
+      <button id="back-button">←</button>
+      <img id="full-thumb" src="" />
+      <h2 id="full-title"></h2>
+      <button id="like-btn">♡</button>
+      <input type="range" id="seek-bar" />
+      <button id="play-pause">▶️</button>
+    </div>
+  </div>
 
-      document.querySelectorAll(".song-card").forEach(card => {
-        const id = card.dataset.id;
-        if (category === "all") {
-          card.style.display = "flex";
-        } else if (category === "liked") {
-          card.style.display = likedSongs[id] ? "flex" : "none";
-        }
-      });
-    }
+  <audio id="bg-music" loop src="ambient.mp3"></audio>
 
-    function toggleTheme() {
-      document.body.classList.toggle("dark");
-    }
-
-    document.getElementById("search").oninput = function (e) {
-      const query = e.target.value.toLowerCase();
-      document.querySelectorAll(".song-card").forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        card.style.display = title.includes(query) ? "flex" : "none";
-      });
-    };
-
-    window.onload = () => {
-      loadSongs();
-    }
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
