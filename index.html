@@ -9,20 +9,20 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
-    /* Existing CSS styles + Polished updates */
     :root {
       --primary: #4aa5ff;
-      --bg: #ffffff;
-      --text: #111;
-      --subtext: #555;
-      --card: #f3f7ff;
-      --border: #dce5f2;
+      --bg: #111;
+      --text: #fff;
+      --subtext: #bbb;
+      --card: #2a2a2a;
+      --border: #333;
+      --accent: #ff8f8f;
     }
 
     body.dark {
       --bg: #111;
       --text: #fff;
-      --subtext: #aaa;
+      --subtext: #bbb;
       --card: #1a1a1a;
       --border: #333;
     }
@@ -39,7 +39,7 @@
       color: var(--text);
       display: flex;
       flex-direction: column;
-      height: 100dvh;
+      height: 100vh;
       overflow: hidden;
     }
 
@@ -79,6 +79,8 @@
       flex: 1;
       overflow-y: auto;
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .filter-tabs {
@@ -95,6 +97,7 @@
       border: none;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: background 0.3s ease;
     }
 
     .filter-tabs button.active {
@@ -110,8 +113,13 @@
       display: flex;
       gap: 1rem;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .song-card:hover {
+      transform: scale(1.05);
     }
 
     .song-card img {
@@ -138,6 +146,7 @@
     .like {
       font-size: 1.4rem;
       cursor: pointer;
+      transition: color 0.3s ease;
     }
 
     #search {
@@ -148,6 +157,12 @@
       border-radius: 8px;
       background: var(--card);
       color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    #search:focus {
+      outline: none;
+      border-color: var(--primary);
     }
 
     .bottom-nav {
@@ -156,6 +171,7 @@
       padding: 0.75rem 0;
       background: var(--card);
       border-top: 1px solid var(--border);
+      transition: background 0.3s ease;
     }
 
     .bottom-nav button {
@@ -164,6 +180,11 @@
       font-size: 1rem;
       color: var(--text);
       cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .bottom-nav button:hover {
+      color: var(--primary);
     }
 
     #mini-player {
@@ -174,6 +195,10 @@
       background: var(--card);
       border-top: 1px solid var(--border);
       font-size: 0.9rem;
+      position: fixed;
+      inset: 0;
+      bottom: 0;
+      z-index: 999;
     }
 
     #mini-player img {
@@ -191,6 +216,7 @@
       padding: 2rem 1rem;
       z-index: 1000;
       text-align: center;
+      color: var(--text);
     }
 
     #now-playing img {
@@ -260,13 +286,13 @@
 
   <script>
     const config = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
-      databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com",
-      projectId: "uvi-web-app-8ec1e",
-      storageBucket: "uvi-web-app-8ec1e.appspot.com",
-      messagingSenderId: "90541572237",
-      appId: "1:90541572237:web:6f59215375cab9e545a2c4"
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
     firebase.initializeApp(config);
     const db = firebase.database();
