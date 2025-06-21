@@ -1,222 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Uvi Vibe Player</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uvi Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --accent: #ff5f6d;
-      --accent2: #ffc371;
-      --bg-dark: #0b0c10;
-      --card-bg: #1a1c22;
-      --nav-bg: #0e0f14;
-    }
-
-    body {
+    * {
       margin: 0;
-      font-family: 'DM Sans', sans-serif;
-      background: linear-gradient(160deg, var(--bg-dark), #16181d);
-      color: white;
-    }
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }body {
+  background: #0f0f0f;
+  color: #fff;
+  padding-bottom: 70px;
+}
 
-    .container {
-      padding: 20px;
-    }
+header {
+  padding: 20px;
+}
 
-    .heading {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
 
-    .tabs {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+.search-bar {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin: 15px 20px;
+  display: flex;
+  align-items: center;
+}
 
-    .tab {
-      font-weight: bold;
-      cursor: pointer;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.06);
-      transition: 0.3s ease;
-    }
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+}
 
-    .tab.active, .tab:hover {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-    }
+.tabs {
+  display: flex;
+  margin: 0 20px;
+  gap: 20px;
+}
 
-    .card-row {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      margin-bottom: 24px;
-    }
+.tab {
+  font-size: 16px;
+  padding: 10px 0;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0.6;
+}
 
-    .card {
-      background: var(--card-bg);
-      border-radius: 18px;
-      overflow: hidden;
-      min-width: 140px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      transition: transform 0.2s ease;
-    }
+.tab.active {
+  color: #ff5e00;
+  opacity: 1;
+}
 
-    .card:hover {
-      transform: scale(1.04);
-    }
+.section-title {
+  font-size: 20px;
+  margin: 25px 20px 10px;
+  font-weight: 700;
+}
 
-    .card img {
-      width: 100%;
-      display: block;
-    }
+.song-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px 20px;
+}
 
-    .card-title {
-      padding: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-    }
+.song-card {
+  width: 140px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #1c1c1c;
+  overflow: hidden;
+  position: relative;
+}
 
-    .player {
-      padding: 20px;
-      background: #101216;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      position: fixed;
-      bottom: 56px;
-      left: 0;
-      right: 0;
-    }
+.song-card img {
+  width: 100%;
+  display: block;
+  border-radius: 14px 14px 0 0;
+}
 
-    .player img {
-      width: 100%;
-      border-radius: 16px;
-    }
+.song-card .info {
+  padding: 10px;
+}
 
-    .song-info {
-      margin: 12px 0;
-      text-align: center;
-    }
+.song-card .title {
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    .song-info .title {
-      font-size: 18px;
-      font-weight: 600;
-    }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a1a;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid #333;
+}
 
-    .song-info .artist {
-      color: #bbb;
-      font-size: 14px;
-    }
+.bottom-nav button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+}
 
-    .progress input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-    }
-
-    .controls {
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .controls button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .controls button:hover {
-      color: var(--accent2);
-    }
-
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 12px;
-      background: var(--nav-bg);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      border-top: 1px solid #222;
-    }
-
-    .bottom-nav i {
-      font-size: 22px;
-      color: #999;
-    }
-
-    .bottom-nav .active {
-      color: var(--accent);
-    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>UVI<br>ALBUMES</h1>
+  </header>  <div class="search-bar">
+    <input type="text" placeholder="Find your Music ...">
+  </div>  <div class="tabs">
+    <div class="tab active">For You</div>
+    <div class="tab">Trending</div>
+  </div>  <div class="section-title">Daily Mix</div>
+  <div class="song-row" id="dailyMix">
+    <!-- Song Cards Injected Here -->
+  </div>  <div class="section-title">Recently Played</div>
+  <div class="song-row" id="recentlyPlayed">
+    <!-- Song Cards Injected Here -->
+  </div>  <div class="bottom-nav">
+    <button>🏠</button>
+    <button>🛒</button>
+    <button>❤️</button>
+    <button>🔔</button>
+  </div>  <script>
+    const songs = [
+      {
+        title: "The Captain",
+        cover: "https://i.imgur.com/EaQ7J3R.jpg",
+        url: "https://your-audio-url.mp3"
+      },
+      {
+        title: "I Don't Know Why",
+        cover: "https://i.imgur.com/W8yEYzO.jpg",
+        url: "https://your-audio-url.mp3"
+      }
+    ];
 
-  <div class="container">
-    <div class="heading">Uvi – Vibe Albums</div>
+    const dailyMix = document.getElementById('dailyMix');
+    const recentlyPlayed = document.getElementById('recentlyPlayed');
 
-    <div class="tabs">
-      <div class="tab active">For You</div>
-      <div class="tab">Trending</div>
-    </div>
+    function createCard(song) {
+      return `<div class="song-card" onclick="playSong('${song.url}', '${song.title}', '${song.cover}')">
+        <img src="${song.cover}" alt="${song.title}">
+        <div class="info">
+          <div class="title">${song.title}</div>
+        </div>
+      </div>`;
+    }
 
-    <div class="card-row">
-      <div class="card">
-        <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
-        <div class="card-title">The Captain</div>
-      </div>
-      <div class="card">
-        <img src="https://i.ibb.co/xMKxQZ3/dont-know-why.jpg" alt="cover" />
-        <div class="card-title">I Don’t Know Why</div>
-      </div>
-    </div>
+    songs.forEach(song => {
+      dailyMix.innerHTML += createCard(song);
+      recentlyPlayed.innerHTML += createCard(song);
+    });
 
-    <div class="heading">Recently Played</div>
-    <div class="card-row">
-      <div class="card">
-        <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
-        <div class="card-title">Man on the Moon</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="player">
-    <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
-    <div class="song-info">
-      <div class="title">The Captain</div>
-      <div class="artist">DANNY AVILA</div>
-    </div>
-    <div class="progress">
-      <input type="range" min="0" max="100" value="40">
-    </div>
-    <div class="controls">
-      <button>⟲</button>
-      <button>⏮️</button>
-      <button>⏯️</button>
-      <button>⏭️</button>
-      <button>⟳</button>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
-    <i class="active">🏠</i>
-    <i>📂</i>
-    <i>❤️</i>
-    <i>👤</i>
-  </div>
-
-</body>
+    function playSong(url, title, cover) {
+      alert("Play: " + title); // Replace this with your custom player logic later
+    }
+  </script></body>
 </html>
