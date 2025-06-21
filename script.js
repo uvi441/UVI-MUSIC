@@ -1,6 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDYJFmTyC0bg88stR33nBlhaZPz5ENtoCE",
   authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
@@ -10,32 +8,50 @@ const firebaseConfig = {
   messagingSenderId: "90541572237",
   appId: "1:90541572237:web:6f59215375cab9e545a2c4"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const songRef = ref(db, 'songs');
+const songListContainer = document.querySelector('.song-list');
+const nowPlaying = document.querySelector('.now-playing');
 
-const container = document.getElementById("song-container"); // set this in your HTML
+function renderSongCard(song) {
+  const card = document.createElement('div');
+  card.className = 'song-card';
 
-onValue(songRef, (snapshot) => {
-  container.innerHTML = "";
-  snapshot.forEach((child) => {
-    const song = child.val();
-    const card = document.createElement("div");
-    card.className = "song-card";
-    card.innerHTML = `
-      <img src="${song.thumbnail}" class="cover" />
-      <div class="info">
-        <h4>${song.title}</h4>
-        <p>${song.category}</p>
-      </div>
-    `;
-    card.addEventListener("click", () => {
-      document.getElementById("main-audio").src = song.audio_url;
-      document.getElementById("now-title").innerText = song.title;
-      document.querySelector(".now-playing").style.display = "block";
-      document.getElementById("main-audio").play();
-    });
-    container.appendChild(card);
+  card.innerHTML = `
+    <img class="song-thumbnail" src="${song.thumbnail}" alt="cover" />
+    <div class="song-info">
+      <p class="song-title">${song.title}</p>
+      <p class="song-category">${song.category || 'Unknown'}</p>
+    </div>
+    <button class="play-btn">Play</button>
+  `;
+
+  card.querySelector('.play-btn').addEventListener('click', () => {
+    playSong(song);
   });
-});
+
+  songListContainer.appendChild(card);
+}
+
+function playSong(song) {
+  nowPlaying.classList.add('show');
+  nowPlaying.innerHTML = `
+    <img src="${song.thumbnail}" alt="cover" />
+    <div class="title">${song.title}</div>
+    <audio controls autoplay src="${song.audio_url}"></audio>
+  `;
+}
+
+// Load songs from Firebase
+function loadSongs() {
+  db.ref('songs').on('value', snapshot => {
+    const songs = snapshot.val();
+    songListContainer.innerHTML = '';
+    for (let id in songs) {
+      renderSongCard(songs[id]);
+    }
+  });
+}
+
+loadSongs();
