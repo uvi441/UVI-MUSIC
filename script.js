@@ -55,3 +55,25 @@ function loadSongs() {
 }
 
 loadSongs();
+let allSongs = [];
+
+function fetchSongs() {
+  firebase.database().ref("songs").once("value", function (snapshot) {
+    const data = snapshot.val();
+    const songs = Object.values(data);
+    allSongs = songs;
+    displaySongs(songs); // You must already have this function in your file
+  });
+}
+
+fetchSongs(); // Load on start
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", function () {
+  const searchTerm = searchInput.value.toLowerCase();
+  const filtered = allSongs.filter(song =>
+    song.title.toLowerCase().includes(searchTerm)
+  );
+  displaySongs(filtered);
+});
