@@ -1,72 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <title>Uvi Music App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uvi Music</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f5f9ff;
+      color: #1c1c1e;
+    }
+
+    header {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+      background: #e6f0ff;
+      color: #0077ff;
+    }
+
+    .song-list {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      gap: 1.2rem;
+    }
+
+    .song-card {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+      transition: 0.2s ease;
+    }
+
+    .song-card:hover {
+      transform: scale(1.01);
+    }
+
+    .song-thumbnail {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 12px;
+    }
+
+    .song-info {
+      flex: 1;
+    }
+
+    .song-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .song-category {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    button.play-btn {
+      background: #0077ff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .now-playing {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 1rem;
+      border-top: 1px solid #ddd;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+
+    .now-playing.show {
+      display: flex;
+    }
+
+    .now-playing img {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+    }
+
+    .now-playing .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .now-playing audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
-
 <body>
-  <div id="splash-screen">
-    <img src="uvi-logo.gif" alt="Uvi Logo" class="splash-logo" />
-  </div>
 
-  <div id="app" class="hidden">
-    <!-- Login/signup screen -->
-    <div id="auth-screen" class="screen">
-      <!-- Login form here -->
-    </div>
+  <header>🎵 Uvi - For You</header>
 
-    <!-- Main player screen -->
-    <div id="main-screen" class="screen hidden">
-      <nav class="bottom-nav">
-        <button data-tab="for-you">For You</button>
-        <button data-tab="playlists">Playlists</button>
-        <button data-tab="library">Library</button>
-      </nav>
+  <div class="song-list"></div>
 
-      <div id="content">
-        <div id="for-you" class="tab active">
-          <!-- Songs will be rendered here -->
+  <div class="now-playing"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYJFmTyC0bg88stR33nBlhaZPz5ENtoCE",
+      authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
+      databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com",
+      projectId: "uvi-web-app-8ec1e",
+      storageBucket: "uvi-web-app-8ec1e.appspot.com",
+      messagingSenderId: "90541572237",
+      appId: "1:90541572237:web:6f59215375cab9e545a2c4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const songListContainer = document.querySelector('.song-list');
+    const nowPlaying = document.querySelector('.now-playing');
+
+    function renderSongCard(song) {
+      const card = document.createElement('div');
+      card.className = 'song-card';
+
+      card.innerHTML = `
+        <img class="song-thumbnail" src="${song.thumbnail}" alt="cover" />
+        <div class="song-info">
+          <p class="song-title">${song.title}</p>
+          <p class="song-category">${song.category || 'Unknown'}</p>
         </div>
-        <div id="playlists" class="tab hidden">
-          <!-- Playlist UI here -->
-        </div>
-        <div id="library" class="tab hidden">
-          <!-- Liked songs here -->
-        </div>
-      </div>
+        <button class="play-btn">Play</button>
+      `;
 
-      <!-- Mini player -->
-      <div id="mini-player" class="hidden">
-        <img id="mini-thumb" src="" />
-        <div>
-          <h4 id="mini-title"></h4>
-        </div>
-        <button id="mini-play">▶️</button>
-      </div>
-    </div>
+      card.querySelector('.play-btn').addEventListener('click', () => {
+        playSong(song);
+      });
 
-    <!-- Full Player -->
-    <div id="now-playing" class="hidden">
-      <button id="back-button">←</button>
-      <img id="full-thumb" src="" />
-      <h2 id="full-title"></h2>
-      <button id="like-btn">♡</button>
-      <input type="range" id="seek-bar" />
-      <button id="play-pause">▶️</button>
-    </div>
-  </div>
+      songListContainer.appendChild(card);
+    }
 
-  <audio id="bg-music" loop src="ambient.mp3"></audio>
+    function playSong(song) {
+      nowPlaying.classList.add('show');
+      nowPlaying.innerHTML = `
+        <img src="${song.thumbnail}" alt="cover" />
+        <div class="title">${song.title}</div>
+        <audio controls autoplay src="${song.audio_url}"></audio>
+      `;
+    }
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="script.js"></script>
+    function loadSongs() {
+      db.ref('songs').on('value', snapshot => {
+        const songs = snapshot.val();
+        songListContainer.innerHTML = '';
+        for (let id in songs) {
+          renderSongCard(songs[id]);
+        }
+      });
+    }
+
+    loadSongs();
+  </script>
+
 </body>
-
 </html>
