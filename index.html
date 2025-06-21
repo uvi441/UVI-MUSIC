@@ -1,246 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Uvi Music App 🎵</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding-bottom: 100px;
-      background: #f0f8ff;
-    }
-    header {
-      background-color: #e6f0ff;
-      padding: 1rem;
-      text-align: center;
-      font-weight: bold;
-      color: #0066cc;
-      font-size: 1.4rem;
-    }
-    .search-bar {
-      padding: 1rem;
-    }
-    .search-bar input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 1rem;
-    }
-    .song-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .song-card {
-      display: flex;
-      align-items: center;
-      background: #fff;
-      padding: 0.75rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-    .song-card:hover {
-      transform: scale(1.02);
-    }
-    .song-card img {
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      object-fit: cover;
-      margin-right: 1rem;
-    }
-    .song-card .info {
-      flex: 1;
-    }
-    .song-card .info h4 {
-      margin: 0;
-      font-size: 1rem;
-      color: #333;
-    }
-    .song-card .info span {
-      font-size: 0.85rem;
-      color: #777;
-    }
-    .mini-player, .full-player {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #fff;
-      padding: 1rem;
-      display: none;
-      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
-    .mini-player.active,
-    .full-player.active {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .mini-player img,
-    .full-player img {
-      height: 50px;
-      border-radius: 10px;
-    }
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .controls button {
-      background: none;
-      border: none;
-      font-size: 1.4rem;
-      cursor: pointer;
-      color: #0066cc;
-    }
-    .full-player {
-      flex-direction: column;
-      align-items: center;
-    }
-    .full-player .controls {
-      margin-top: 1rem;
-    }
-    .full-player .close-btn {
-      align-self: flex-start;
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #333;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uvi Music App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-
-  <header>Uvi 🩵 Music</header>
-
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search for songs...">
+  <div id="splash-screen">
+    <div class="logo">Uvi</div>
   </div>
 
-  <div class="song-list" id="songList">
-    <!-- Songs from Firebase will appear here -->
-  </div>
+  <div class="app">
+    <header>
+      <h1>Uvi</h1>
+      <button id="theme-toggle">🌓</button>
+    </header>
 
-  <div class="mini-player" id="miniPlayer">
-    <img id="miniThumb" src="" />
-    <div class="controls">
-      <button id="prevBtn">⏮️</button>
-      <button id="playPauseBtn">⏯️</button>
-      <button id="nextBtn">⏭️</button>
-      <button id="openFullBtn">🔼</button>
+    <div class="tabs">
+      <button class="tab active" data-category="all">All</button>
+      <button class="tab" data-category="liked">Liked</button>
+    </div>
+
+    <input type="text" id="search" placeholder="Search songs..." />
+
+    <div id="songs-container" class="songs-container"></div>
+
+    <!-- Mini Player -->
+    <div id="mini-player" class="mini-player">
+      <img id="mini-thumbnail" src="" alt="" />
+      <div class="mini-info">
+        <p id="mini-title"></p>
+      </div>
+      <div class="mini-controls">
+        <button id="mini-prev">⏮️</button>
+        <button id="mini-play">▶️</button>
+        <button id="mini-next">⏭️</button>
+      </div>
+    </div>
+
+    <!-- Full Player -->
+    <div id="full-player" class="full-player hidden">
+      <button id="back-button">←</button>
+      <img id="full-thumbnail" src="" alt="" />
+      <h2 id="full-title"></h2>
+      <audio id="audio" controls></audio>
+      <div class="controls">
+        <button id="prev">⏮️</button>
+        <button id="play">▶️</button>
+        <button id="next">⏭️</button>
+        <button id="like">❤️</button>
+      </div>
     </div>
   </div>
 
-  <div class="full-player" id="fullPlayer">
-    <span class="close-btn" id="closeFullBtn">🔽</span>
-    <img id="fullThumb" src="" />
-    <h3 id="fullTitle"></h3>
-    <div class="controls">
-      <button id="prevBtnFull">⏮️</button>
-      <button id="playPauseBtnFull">⏯️</button>
-      <button id="nextBtnFull">⏭️</button>
-    </div>
-  </div>
-
-  <audio id="audioPlayer" preload="metadata"></audio>
-
-  <script>
-    const audio = document.getElementById("audioPlayer");
-    const songListEl = document.getElementById("songList");
-    const searchInput = document.getElementById("searchInput");
-
-    let songs = [];
-    let currentSongIndex = 0;
-
-    async function fetchSongs() {
-      const res = await fetch("https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com/songs.json");
-      const data = await res.json();
-      songs = Object.values(data);
-      renderSongs(songs);
-    }
-
-    function renderSongs(list) {
-      songListEl.innerHTML = "";
-      list.forEach((song, index) => {
-        const el = document.createElement("div");
-        el.className = "song-card";
-        el.innerHTML = `
-          <img src="${song.thumbnail}" />
-          <div class="info">
-            <h4>${song.title}</h4>
-            <span>${song.category}</span>
-          </div>
-        `;
-        el.onclick = () => playSong(index);
-        songListEl.appendChild(el);
-      });
-    }
-
-    function playSong(index) {
-      currentSongIndex = index;
-      const song = songs[index];
-      audio.src = song.audio_url;
-      audio.play();
-
-      document.getElementById("miniThumb").src = song.thumbnail;
-      document.getElementById("fullThumb").src = song.thumbnail;
-      document.getElementById("fullTitle").textContent = song.title;
-
-      document.getElementById("miniPlayer").classList.add("active");
-      document.getElementById("fullPlayer").classList.remove("active");
-    }
-
-    function togglePlay() {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    }
-
-    function playNext() {
-      if (currentSongIndex < songs.length - 1) {
-        playSong(currentSongIndex + 1);
-      }
-    }
-
-    function playPrev() {
-      if (currentSongIndex > 0) {
-        playSong(currentSongIndex - 1);
-      }
-    }
-
-    document.getElementById("playPauseBtn").onclick = togglePlay;
-    document.getElementById("playPauseBtnFull").onclick = togglePlay;
-    document.getElementById("nextBtn").onclick = playNext;
-    document.getElementById("prevBtn").onclick = playPrev;
-    document.getElementById("nextBtnFull").onclick = playNext;
-    document.getElementById("prevBtnFull").onclick = playPrev;
-    document.getElementById("openFullBtn").onclick = () => {
-      document.getElementById("miniPlayer").classList.remove("active");
-      document.getElementById("fullPlayer").classList.add("active");
-    };
-    document.getElementById("closeFullBtn").onclick = () => {
-      document.getElementById("fullPlayer").classList.remove("active");
-      document.getElementById("miniPlayer").classList.add("active");
-    };
-
-    searchInput.addEventListener("input", () => {
-      const query = searchInput.value.toLowerCase();
-      const filtered = songs.filter(song => song.title.toLowerCase().includes(query));
-      renderSongs(filtered);
-    });
-
-    fetchSongs();
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
