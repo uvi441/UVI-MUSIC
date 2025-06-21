@@ -1,201 +1,222 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uvi Vibe Player</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --accent: #ff5f6d;
+      --accent2: #ffc371;
+      --bg-dark: #0b0c10;
+      --card-bg: #1a1c22;
+      --nav-bg: #0e0f14;
+    }
+
     body {
       margin: 0;
       font-family: 'DM Sans', sans-serif;
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      color: #fff;
-    }header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+      background: linear-gradient(160deg, var(--bg-dark), #16181d);
+      color: white;
+    }
 
-h1 {
-  font-size: 1.8rem;
-  color: #fff;
-}
+    .container {
+      padding: 20px;
+    }
 
-#theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: #fff;
-}
+    .heading {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-}
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
 
-.tab {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  padding: 0.5rem 1.5rem;
-  margin: 0 0.5rem;
-  border-radius: 2rem;
-  color: #fff;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
+    .tab {
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      transition: 0.3s ease;
+    }
 
-.tab.active {
-  background: #fff;
-  color: #0072ff;
-}
+    .tab.active, .tab:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+    }
 
-#search {
-  width: 90%;
-  display: block;
-  margin: 0 auto 1rem;
-  padding: 0.75rem;
-  border-radius: 1rem;
-  border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
+    .card-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
 
-.songs-container {
-  display: grid;
-  gap: 1rem;
-  padding: 0 1rem;
-}
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      overflow: hidden;
+      min-width: 140px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease;
+    }
 
-.song-card {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  padding: 0.5rem;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s ease;
-}
+    .card:hover {
+      transform: scale(1.04);
+    }
 
-.song-card:hover {
-  transform: scale(1.02);
-}
+    .card img {
+      width: 100%;
+      display: block;
+    }
 
-.song-card img {
-  width: 60px;
-  height: 60px;
-  border-radius: 0.75rem;
-  margin-right: 1rem;
-}
+    .card-title {
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
 
-.mini-player, .full-player {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  z-index: 100;
-  color: #fff;
-}
+    .player {
+      padding: 20px;
+      background: #101216;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      position: fixed;
+      bottom: 56px;
+      left: 0;
+      right: 0;
+    }
 
-.mini-player img, .full-player img {
-  width: 50px;
-  height: 50px;
-  border-radius: 0.5rem;
-}
+    .player img {
+      width: 100%;
+      border-radius: 16px;
+    }
 
-.mini-info {
-  flex-grow: 1;
-  padding: 0 1rem;
-}
+    .song-info {
+      margin: 12px 0;
+      text-align: center;
+    }
 
-.mini-controls button, .controls button {
-  background: none;
-  border: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: #fff;
-}
+    .song-info .title {
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-.full-player {
-  flex-direction: column;
-  text-align: center;
-  padding: 2rem 1rem;
-}
+    .song-info .artist {
+      color: #bbb;
+      font-size: 14px;
+    }
 
-.full-player.hidden {
-  display: none;
-}
+    .progress input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
 
-#back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: #fff;
-  color: #0072ff;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  width: 40px;
-  height: 40px;
-}
+    .controls {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      margin-top: 10px;
+    }
 
-#full-title {
-  margin: 1rem 0;
-  font-size: 1.5rem;
-}
+    .controls button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
+    .controls button:hover {
+      color: var(--accent2);
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px;
+      background: var(--nav-bg);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #222;
+    }
+
+    .bottom-nav i {
+      font-size: 22px;
+      color: #999;
+    }
+
+    .bottom-nav .active {
+      color: var(--accent);
+    }
   </style>
-</head><body>
-  <div id="splash-screen">
-    <div class="logo">Uvi</div>
-  </div>  <div class="app">
-    <header>
-      <h1>Uvi</h1>
-      <button id="theme-toggle">🌓</button>
-    </header><div class="tabs">
-  <button class="tab active" data-category="all">All</button>
-  <button class="tab" data-category="liked">Liked</button>
-</div>
+</head>
+<body>
 
-<input type="text" id="search" placeholder="Search songs..." />
+  <div class="container">
+    <div class="heading">Uvi – Vibe Albums</div>
 
-<div id="songs-container" class="songs-container"></div>
+    <div class="tabs">
+      <div class="tab active">For You</div>
+      <div class="tab">Trending</div>
+    </div>
 
-<div id="mini-player" class="mini-player">
-  <img id="mini-thumbnail" src="" alt="" />
-  <div class="mini-info">
-    <p id="mini-title"></p>
+    <div class="card-row">
+      <div class="card">
+        <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+        <div class="card-title">The Captain</div>
+      </div>
+      <div class="card">
+        <img src="https://i.ibb.co/xMKxQZ3/dont-know-why.jpg" alt="cover" />
+        <div class="card-title">I Don’t Know Why</div>
+      </div>
+    </div>
+
+    <div class="heading">Recently Played</div>
+    <div class="card-row">
+      <div class="card">
+        <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+        <div class="card-title">Man on the Moon</div>
+      </div>
+    </div>
   </div>
-  <div class="mini-controls">
-    <button id="mini-prev">⏮️</button>
-    <button id="mini-play">▶️</button>
-    <button id="mini-next">⏭️</button>
-  </div>
-</div>
 
-<div id="full-player" class="full-player hidden">
-  <button id="back-button">←</button>
-  <img id="full-thumbnail" src="" alt="" />
-  <h2 id="full-title"></h2>
-  <audio id="audio" controls></audio>
-  <div class="controls">
-    <button id="prev">⏮️</button>
-    <button id="play">▶️</button>
-    <button id="next">⏭️</button>
-    <button id="like">❤️</button>
+  <div class="player">
+    <img src="https://i.ibb.co/XFZkSpW/the-captain.jpg" alt="cover" />
+    <div class="song-info">
+      <div class="title">The Captain</div>
+      <div class="artist">DANNY AVILA</div>
+    </div>
+    <div class="progress">
+      <input type="range" min="0" max="100" value="40">
+    </div>
+    <div class="controls">
+      <button>⟲</button>
+      <button>⏮️</button>
+      <button>⏯️</button>
+      <button>⏭️</button>
+      <button>⟳</button>
+    </div>
   </div>
-</div>
 
-  </div>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>  <script src="script.js"></script></body></html>
+  <div class="bottom-nav">
+    <i class="active">🏠</i>
+    <i>📂</i>
+    <i>❤️</i>
+    <i>👤</i>
+  </div>
+
+</body>
+</html>
