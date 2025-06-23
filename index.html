@@ -1,31 +1,75 @@
-// script.js - Firebase + Player Logic
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uvi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="splash-screen">
+    <h1 class="logo">Uvi</h1>
+  </div>
 
-const firebaseConfig = { apiKey: "AIzaSyA...", // Replace with your actual config authDomain: "uvi-web-app-8ec1e.firebaseapp.com", databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com", projectId: "uvi-web-app-8ec1e", storageBucket: "uvi-web-app-8ec1e.appspot.com", messagingSenderId: "...", appId: "..." };
+  <div class="app">
+    <!-- Top Bar -->
+    <header>
+      <h2>For You</h2>
+      <input type="text" id="searchInput" placeholder="Search songs..." />
+    </header>
 
-firebase.initializeApp(firebaseConfig); const db = firebase.database(); const songContainer = document.getElementById('songs'); const searchInput = document.getElementById('search');
+    <!-- Category Filters -->
+    <div class="filters">
+      <button data-cat="trending">Trending</button>
+      <button data-cat="hindi">Hindi</button>
+      <button data-cat="punjabi">Punjabi</button>
+      <button data-cat="english">English</button>
+      <button data-cat="gujarati">Gujarati</button>
+      <button data-cat="chill">Chill</button>
+    </div>
 
-let allSongs = [];
+    <!-- Song List -->
+    <div id="songList" class="song-list"></div>
 
-function createSongCard(song, index) { const card = document.createElement('div'); card.className = 'song'; card.innerHTML = <img src="${song.thumbnail}" /> <div class="song-title">${song.title}</div>; card.onclick = () => openPlayer(index); return card; }
+    <!-- Mini Player -->
+    <div id="miniPlayer" class="mini-player hidden">
+      <img id="miniThumb" />
+      <div>
+        <p id="miniTitle">Song title</p>
+      </div>
+      <div class="mini-controls">
+        <button id="prevBtn">⏮️</button>
+        <button id="playPauseBtn">▶️</button>
+        <button id="nextBtn">⏭️</button>
+      </div>
+    </div>
 
-function renderSongs(songs) { songContainer.innerHTML = ''; songs.forEach((song, i) => { songContainer.appendChild(createSongCard(song, i)); }); }
+    <!-- Full Player -->
+    <div id="fullPlayer" class="full-player hidden">
+      <button id="closePlayer">←</button>
+      <img id="fullThumb" />
+      <h2 id="fullTitle">Now Playing</h2>
+      <audio id="audioPlayer" controls></audio>
+      <div class="full-controls">
+        <button id="prevBtnFull">⏮️</button>
+        <button id="playPauseBtnFull">▶️</button>
+        <button id="nextBtnFull">⏭️</button>
+      </div>
+    </div>
 
-// Load Songs from Firebase db.ref("songs").on("value", (snapshot) => { allSongs = Object.values(snapshot.val() || {}); renderSongs(allSongs); });
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <button data-tab="forYou">For You</button>
+      <button data-tab="playlists">Playlists</button>
+      <button data-tab="library">Library</button>
+    </nav>
+  </div>
 
-// Search Logic searchInput.addEventListener("input", (e) => { const q = e.target.value.toLowerCase(); const filtered = allSongs.filter((s) => s.title.toLowerCase().includes(q)); renderSongs(filtered); });
-
-// Player Logic const audio = document.getElementById("audio"); const miniPlayer = document.getElementById("miniPlayer"); const fullPlayer = document.getElementById("fullPlayer"); let currentIndex = 0;
-
-function openPlayer(index) { const song = allSongs[index]; currentIndex = index; audio.src = song.audio_url; document.getElementById("miniTitle").innerText = song.title; document.getElementById("miniThumb").src = song.thumbnail; document.getElementById("fullTitle").innerText = song.title; document.getElementById("fullThumb").src = song.thumbnail;
-
-miniPlayer.classList.remove("hidden"); fullPlayer.classList.remove("hidden"); audio.play(); }
-
-document.getElementById("playPauseBtn").onclick = () => { if (audio.paused) audio.play(); else audio.pause(); };
-
-document.getElementById("nextBtn").onclick = () => { if (currentIndex < allSongs.length - 1) openPlayer(currentIndex + 1); };
-
-document.getElementById("prevBtn").onclick = () => { if (currentIndex > 0) openPlayer(currentIndex - 1); };
-
-document.getElementById("backBtn").onclick = () => { fullPlayer.classList.add("hidden"); };
-
-  
+  <!-- Firebase + Script -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
