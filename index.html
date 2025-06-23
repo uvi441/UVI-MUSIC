@@ -1,73 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Uvi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uvi Vibe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 20px 0 10px;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .container {
+      padding: 0 16px;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .search-box {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .category-btn {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .category-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .song-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .song-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    }
+    .song-card img {
+      width: 100%;
+      display: block;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    }
+    .song-info {
+      padding: 10px 14px;
+    }
+    .song-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .song-category {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-      <h1 class="uvi-logo">Uvi</h1>
-    </div>
+  <header>Uvi</header>
+  <div class="container">
+    <h2>For You</h2>
+    <input type="text" id="search" class="search-box" placeholder="Search songs..."><div class="categories">
+  <button class="category-btn" onclick="filterSongs('All')">All</button>
+  <button class="category-btn" onclick="filterSongs('Trending')">Trending</button>
+  <button class="category-btn" onclick="filterSongs('Hindi')">Hindi</button>
+  <button class="category-btn" onclick="filterSongs('Punjabi')">Punjabi</button>
+  <button class="category-btn" onclick="filterSongs('English')">English</button>
+  <button class="category-btn" onclick="filterSongs('Gujarati')">Gujarati</button>
+  <button class="category-btn" onclick="filterSongs('Chill')">Chill</button>
+</div>
 
-    <!-- Top Bar -->
-    <header class="top-bar">
-      <h2>For You</h2>
-      <button id="theme-toggle">🌓</button>
-    </header>
+<div class="song-list" id="songList">
+  <!-- Songs will be dynamically added here -->
+</div>
 
-    <!-- Filter Tabs -->
-    <div class="filters">
-      <button class="filter active" data-filter="all">All</button>
-      <button class="filter" data-filter="liked">Liked</button>
-      <button class="filter" data-filter="lofi">Lofi</button>
-      <button class="filter" data-filter="hindi">Hindi</button>
-      <button class="filter" data-filter="english">English</button>
-    </div>
+  </div>  <script>
+    let allSongs = []
 
-    <!-- Song List -->
-    <main id="song-list" class="song-list"></main>
+    // Firebase data fetch
+    fetch('https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com/songs.json')
+      .then(res => res.json())
+      .then(data => {
+        allSongs = Object.values(data || {})
+        displaySongs(allSongs)
+      })
 
-    <!-- Mini Player -->
-    <div id="mini-player" class="mini-player hidden">
-      <img id="mini-thumbnail" />
-      <div class="mini-info">
-        <h4 id="mini-title"></h4>
-        <progress id="mini-progress" value="0" max="100"></progress>
-      </div>
-      <div class="mini-controls">
-        <button id="mini-prev">⏮️</button>
-        <button id="mini-play">▶️</button>
-        <button id="mini-next">⏭️</button>
-      </div>
-    </div>
+    function displaySongs(songs) {
+      const list = document.getElementById('songList')
+      list.innerHTML = ''
+      songs.forEach(song => {
+        const card = document.createElement('div')
+        card.className = 'song-card'
+        card.innerHTML = `
+          <img src="${song.thumbnail}" alt="cover">
+          <div class="song-info">
+            <div class="song-title">${song.title}</div>
+            <div class="song-category">${song.category}</div>
+          </div>
+        `
+        list.appendChild(card)
+      })
+    }
 
-    <!-- Full Player -->
-    <div id="full-player" class="full-player hidden">
-      <button id="close-player">←</button>
-      <img id="full-thumbnail" />
-      <h2 id="full-title"></h2>
-      <audio id="audio" controls></audio>
-      <div class="player-controls">
-        <button id="prev">⏮️</button>
-        <button id="play">▶️</button>
-        <button id="next">⏭️</button>
-      </div>
-      <button id="like-btn">❤️</button>
-    </div>
+    document.getElementById('search').addEventListener('input', (e) => {
+      const keyword = e.target.value.toLowerCase()
+      const filtered = allSongs.filter(song => song.title.toLowerCase().includes(keyword))
+      displaySongs(filtered)
+    })
 
-    <!-- Bottom Nav -->
-    <footer class="bottom-nav">
-      <button class="nav-btn active">🏠 Home</button>
-      <button class="nav-btn">📁 Playlists</button>
-      <button class="nav-btn">👤 Profile</button>
-    </footer>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+    function filterSongs(category) {
+      if (category === 'All') return displaySongs(allSongs)
+      const filtered = allSongs.filter(song => song.category === category)
+      displaySongs(filtered)
+    }
+  </script></body>
 </html>
