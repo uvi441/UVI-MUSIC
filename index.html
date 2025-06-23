@@ -1,226 +1,31 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi Music</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-    body {
-      background: linear-gradient(135deg, #1e1e2f, #23234d);
-      color: white;
-      padding: 20px;
-      overflow-x: hidden;
-    }
-    header {
-      font-size: 2.5em;
-      font-weight: 700;
-      margin-bottom: 25px;
-      color: #ffffff;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-    }
-    .tabs {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    .tab {
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      transition: 0.3s;
-    }
-    .tab.active {
-      background: #6c5ce7;
-      color: white;
-    }
-    .tab:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-    .songs {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding-bottom: 20px;
-    }
-    .song-card {
-      min-width: 180px;
-      height: 220px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: center;
-      flex-direction: column;
-      transition: transform 0.3s, background 0.3s;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    }
-    .song-card img {
-      max-width: 100%;
-      border-radius: 16px;
-      margin-bottom: 12px;
-    }
-    .song-card p {
-      font-size: 0.9em;
-      font-weight: 500;
-      color: #ffffffcc;
-    }
-    .song-card:hover {
-      transform: translateY(-5px) scale(1.03);
-      background: rgba(255, 255, 255, 0.1);
-    }
-    .now-playing {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      padding: 20px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-    .now-playing.show {
-      display: flex;
-    }
-    .now-playing img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 16px;
-      margin-bottom: 12px;
-    }
-    .title {
-      font-size: 1.3em;
-      font-weight: 600;
-    }
-    .artist {
-      font-size: 0.95em;
-      opacity: 0.7;
-      margin-bottom: 10px;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-      margin-top: 10px;
-    }
-    .controls button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.6em;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .controls button:active {
-      transform: scale(0.9);
-    }
-  </style>
-</head>
-<body>
-  <header>Uvi</header>  <div class="tabs">
-    <div class="tab active">For You</div>
-    <div class="tab">Trending</div>
-  </div>  <div class="songs" id="songList">
-    <!-- Songs loaded from Firebase -->
-  </div>  <div class="now-playing" id="nowPlaying">
-    <img id="nowThumb" src="" alt="Cover">
-    <div class="title" id="nowTitle">Title</div>
-    <div class="artist" id="nowArtist">Artist</div>
-    <audio id="audioPlayer" controls style="width: 100%; margin: 10px 0;"></audio>
-    <div class="controls">
-      <button onclick="prevSong()">⏮</button>
-      <button onclick="togglePlay()" id="playPause">⏸</button>
-      <button onclick="nextSong()">⏭</button>
-    </div>
-  </div>  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBp7wPp0lTDMoURAmoA8jB2hP8qc-36zGU",
-      authDomain: "uvi-web-app-8ec1e.firebaseapp.com",
-      databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com",
-      projectId: "uvi-web-app-8ec1e",
-      storageBucket: "uvi-web-app-8ec1e.appspot.com",
-      messagingSenderId: "501728434875",
-      appId: "1:501728434875:web:53c4382803ea234f0b1a31"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+// script.js - Firebase + Player Logic
 
-    const songList = document.getElementById('songList');
-    const nowPlaying = document.getElementById('nowPlaying');
-    const nowThumb = document.getElementById('nowThumb');
-    const nowTitle = document.getElementById('nowTitle');
-    const nowArtist = document.getElementById('nowArtist');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const playPause = document.getElementById('playPause');
+const firebaseConfig = { apiKey: "AIzaSyA...", // Replace with your actual config authDomain: "uvi-web-app-8ec1e.firebaseapp.com", databaseURL: "https://uvi-web-app-8ec1e-default-rtdb.firebaseio.com", projectId: "uvi-web-app-8ec1e", storageBucket: "uvi-web-app-8ec1e.appspot.com", messagingSenderId: "...", appId: "..." };
 
-    let currentSongs = [];
-    let currentIndex = 0;
+firebase.initializeApp(firebaseConfig); const db = firebase.database(); const songContainer = document.getElementById('songs'); const searchInput = document.getElementById('search');
 
-    function showNowPlaying(song) {
-      nowThumb.src = song.thumbnail;
-      nowTitle.textContent = song.title;
-      nowArtist.textContent = song.artist || 'Unknown';
-      audioPlayer.src = song.audio_url;
-      nowPlaying.classList.add('show');
-      audioPlayer.play();
-    }
+let allSongs = [];
 
-    function togglePlay() {
-      if (audioPlayer.paused) {
-        audioPlayer.play();
-        playPause.textContent = '⏸';
-      } else {
-        audioPlayer.pause();
-        playPause.textContent = '▶️';
-      }
-    }
+function createSongCard(song, index) { const card = document.createElement('div'); card.className = 'song'; card.innerHTML = <img src="${song.thumbnail}" /> <div class="song-title">${song.title}</div>; card.onclick = () => openPlayer(index); return card; }
 
-    function prevSong() {
-      if (currentIndex > 0) {
-        currentIndex--;
-        showNowPlaying(currentSongs[currentIndex]);
-      }
-    }
+function renderSongs(songs) { songContainer.innerHTML = ''; songs.forEach((song, i) => { songContainer.appendChild(createSongCard(song, i)); }); }
 
-    function nextSong() {
-      if (currentIndex < currentSongs.length - 1) {
-        currentIndex++;
-        showNowPlaying(currentSongs[currentIndex]);
-      }
-    }
+// Load Songs from Firebase db.ref("songs").on("value", (snapshot) => { allSongs = Object.values(snapshot.val() || {}); renderSongs(allSongs); });
 
-    db.ref('songs').on('value', snapshot => {
-      songList.innerHTML = '';
-      const data = snapshot.val();
-      currentSongs = Object.values(data || {});
-      currentSongs.forEach((song, index) => {
-        const div = document.createElement('div');
-        div.className = 'song-card';
-        div.innerHTML = `<img src="${song.thumbnail}" alt=""><p>${song.title}</p>`;
-        div.onclick = () => {
-          currentIndex = index;
-          showNowPlaying(song);
-        };
-        songList.appendChild(div);
-      });
-    });
-  </script>  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script></body>
-</html>
+// Search Logic searchInput.addEventListener("input", (e) => { const q = e.target.value.toLowerCase(); const filtered = allSongs.filter((s) => s.title.toLowerCase().includes(q)); renderSongs(filtered); });
+
+// Player Logic const audio = document.getElementById("audio"); const miniPlayer = document.getElementById("miniPlayer"); const fullPlayer = document.getElementById("fullPlayer"); let currentIndex = 0;
+
+function openPlayer(index) { const song = allSongs[index]; currentIndex = index; audio.src = song.audio_url; document.getElementById("miniTitle").innerText = song.title; document.getElementById("miniThumb").src = song.thumbnail; document.getElementById("fullTitle").innerText = song.title; document.getElementById("fullThumb").src = song.thumbnail;
+
+miniPlayer.classList.remove("hidden"); fullPlayer.classList.remove("hidden"); audio.play(); }
+
+document.getElementById("playPauseBtn").onclick = () => { if (audio.paused) audio.play(); else audio.pause(); };
+
+document.getElementById("nextBtn").onclick = () => { if (currentIndex < allSongs.length - 1) openPlayer(currentIndex + 1); };
+
+document.getElementById("prevBtn").onclick = () => { if (currentIndex > 0) openPlayer(currentIndex - 1); };
+
+document.getElementById("backBtn").onclick = () => { fullPlayer.classList.add("hidden"); };
+
+  
