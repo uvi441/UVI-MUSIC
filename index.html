@@ -1,75 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uvi</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uvi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="splash-screen">
-    <h1 class="logo">Uvi</h1>
-  </div>
+  <div class="app">
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+      <h1 class="uvi-logo">Uvi</h1>
+    </div>
 
-  <div class="app">
-    <!-- Top Bar -->
-    <header>
-      <h2>For You</h2>
-      <input type="text" id="searchInput" placeholder="Search songs..." />
-    </header>
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <h2>For You</h2>
+      <button id="theme-toggle">🌓</button>
+    </header>
 
-    <!-- Category Filters -->
-    <div class="filters">
-      <button data-cat="trending">Trending</button>
-      <button data-cat="hindi">Hindi</button>
-      <button data-cat="punjabi">Punjabi</button>
-      <button data-cat="english">English</button>
-      <button data-cat="gujarati">Gujarati</button>
-      <button data-cat="chill">Chill</button>
-    </div>
+    <!-- Filter Tabs -->
+    <div class="filters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="liked">Liked</button>
+      <button class="filter" data-filter="lofi">Lofi</button>
+      <button class="filter" data-filter="hindi">Hindi</button>
+      <button class="filter" data-filter="english">English</button>
+    </div>
 
-    <!-- Song List -->
-    <div id="songList" class="song-list"></div>
+    <!-- Song List -->
+    <main id="song-list" class="song-list"></main>
 
-    <!-- Mini Player -->
-    <div id="miniPlayer" class="mini-player hidden">
-      <img id="miniThumb" />
-      <div>
-        <p id="miniTitle">Song title</p>
-      </div>
-      <div class="mini-controls">
-        <button id="prevBtn">⏮️</button>
-        <button id="playPauseBtn">▶️</button>
-        <button id="nextBtn">⏭️</button>
-      </div>
-    </div>
+    <!-- Mini Player -->
+    <div id="mini-player" class="mini-player hidden">
+      <img id="mini-thumbnail" />
+      <div class="mini-info">
+        <h4 id="mini-title"></h4>
+        <progress id="mini-progress" value="0" max="100"></progress>
+      </div>
+      <div class="mini-controls">
+        <button id="mini-prev">⏮️</button>
+        <button id="mini-play">▶️</button>
+        <button id="mini-next">⏭️</button>
+      </div>
+    </div>
 
-    <!-- Full Player -->
-    <div id="fullPlayer" class="full-player hidden">
-      <button id="closePlayer">←</button>
-      <img id="fullThumb" />
-      <h2 id="fullTitle">Now Playing</h2>
-      <audio id="audioPlayer" controls></audio>
-      <div class="full-controls">
-        <button id="prevBtnFull">⏮️</button>
-        <button id="playPauseBtnFull">▶️</button>
-        <button id="nextBtnFull">⏭️</button>
-      </div>
-    </div>
+    <!-- Full Player -->
+    <div id="full-player" class="full-player hidden">
+      <button id="close-player">←</button>
+      <img id="full-thumbnail" />
+      <h2 id="full-title"></h2>
+      <audio id="audio" controls></audio>
+      <div class="player-controls">
+        <button id="prev">⏮️</button>
+        <button id="play">▶️</button>
+        <button id="next">⏭️</button>
+      </div>
+      <button id="like-btn">❤️</button>
+    </div>
 
-    <!-- Bottom Nav -->
-    <nav class="bottom-nav">
-      <button data-tab="forYou">For You</button>
-      <button data-tab="playlists">Playlists</button>
-      <button data-tab="library">Library</button>
-    </nav>
-  </div>
+    <!-- Bottom Nav -->
+    <footer class="bottom-nav">
+      <button class="nav-btn active">🏠 Home</button>
+      <button class="nav-btn">📁 Playlists</button>
+      <button class="nav-btn">👤 Profile</button>
+    </footer>
+  </div>
 
-  <!-- Firebase + Script -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
