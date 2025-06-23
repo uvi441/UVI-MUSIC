@@ -1,99 +1,173 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #b0d0ff, #d0bfff);
-  color: #fff;
-  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #e0f7ff, #ffffff);
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
 }
 
-header {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.app {
+  width: 100%;
+  max-width: 480px;
+  background: #fdfdfd;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-header input {
-  padding: 0.6rem;
-  border-radius: 1rem;
-  border: none;
-  outline: none;
-  width: 100%;
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  background: #d0eaff;
+  font-weight: 600;
 }
 
 .filters {
-  display: flex;
-  overflow-x: auto;
-  padding: 0 1rem;
-  gap: 0.5rem;
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+  gap: 10px;
+  background: #f2faff;
 }
 
-.filters button {
-  background: rgba(255,255,255,0.2);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  color: white;
+.filter {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #e6f7ff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.filter.active {
+  background: #00aaff;
+  color: white;
 }
 
 .song-list {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  padding: 12px;
+  display: grid;
+  gap: 12px;
 }
 
 .song-card {
-  display: flex;
-  align-items: center;
-  background: rgba(255,255,255,0.1);
-  padding: 0.8rem;
-  border-radius: 1rem;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.song-card:hover {
+  transform: scale(1.02);
 }
 
 .song-card img {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  margin-right: 1rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  margin-right: 12px;
 }
 
-.song-card h3 {
-  font-size: 1rem;
-}
-
-.mini-player, .full-player {
-  position: fixed;
-  bottom: 60px;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-}
-
-.mini-player.hidden,
-.full-player.hidden {
-  display: none;
+.song-info h4 {
+  font-size: 16px;
 }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #222;
-  display: flex;
-  justify-content: space-around;
-  padding: 0.8rem 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #d0eaff;
 }
 
-.bottom-nav button {
-  background: none;
-  color: white;
-  border: none;
-  font-size: 1rem;
+.nav-btn {
+  font-size: 18px;
+  background: none;
+  border: none;
+}
+
+.nav-btn.active {
+  color: #0077cc;
+}
+
+.mini-player {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  background: #ffffffcc;
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.mini-player.hidden {
+  display: none;
+}
+
+.mini-info {
+  flex: 1;
+}
+
+.mini-player img {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+}
+
+.mini-controls button {
+  font-size: 18px;
+  background: none;
+  border: none;
+}
+
+.full-player {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+  z-index: 99;
+}
+
+.full-player.hidden {
+  display: none;
+}
+
+.full-player img {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.player-controls button {
+  font-size: 24px;
+  margin: 0 12px;
+  background: none;
+  border: none;
+}
+
+#like-btn {
+  font-size: 24px;
+  background: none;
+  border: none;
 }
