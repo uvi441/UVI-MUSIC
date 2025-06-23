@@ -1,166 +1,99 @@
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to bottom, #e0f7fa, #ffffff);
-  color: #333;
-}
-
-#splash-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #b2ebf2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: bold;
-  animation: fadeOut 2s ease forwards;
-  z-index: 1000;
-}
-
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; }
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #b0d0ff, #d0bfff);
+  color: #fff;
+  overflow-x: hidden;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  font-size: 1.5rem;
-  background-color: #ffffffaa;
-  backdrop-filter: blur(5px);
-  border-bottom: 1px solid #ccc;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
+header input {
+  padding: 0.6rem;
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+  width: 100%;
 }
 
-.tab {
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 20px;
-  background: #d1f2f6;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-.tab.active {
-  background: #00acc1;
-  color: white;
+.filters {
+  display: flex;
+  overflow-x: auto;
+  padding: 0 1rem;
+  gap: 0.5rem;
 }
 
-#search {
-  width: 90%;
-  display: block;
-  margin: 0 auto 1rem;
-  padding: 0.7rem 1rem;
-  border-radius: 20px;
-  border: 1px solid #ccc;
+.filters button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
 }
 
-.songs-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+.song-list {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .song-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: white;
-  border-radius: 16px;
-  padding: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.1);
+  padding: 0.8rem;
+  border-radius: 1rem;
 }
-.song-card:hover {
-  transform: scale(1.01);
-}
+
 .song-card img {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  object-fit: cover;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  margin-right: 1rem;
 }
-.song-card .info {
-  flex-grow: 1;
-}
-.song-card button {
-  border: none;
-  background: none;
-  font-size: 1.2rem;
+
+.song-card h3 {
+  font-size: 1rem;
 }
 
 .mini-player, .full-player {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  background: #ffffff;
-  border-top: 1px solid #ddd;
-  padding: 0.8rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 
-.mini-player img {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-}
-
-.mini-info {
-  flex-grow: 1;
-  margin: 0 1rem;
-  overflow: hidden;
-}
-.mini-info p {
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mini-controls, .controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
+.mini-player.hidden,
 .full-player.hidden {
-  display: none;
+  display: none;
 }
 
-.full-player {
-  flex-direction: column;
-  align-items: center;
-  padding-top: 1rem;
-  z-index: 100;
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #222;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.8rem 0;
 }
 
-.full-player img {
-  width: 70%;
-  max-width: 300px;
-  border-radius: 20px;
-  margin-bottom: 1rem;
-}
-
-#back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  font-size: 1.5rem;
-  background: none;
-  border: none;
+.bottom-nav button {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 1rem;
 }
