@@ -8,72 +8,81 @@ const firebaseConfig = {
   messagingSenderId: "90541572237",
   appId: "1:90541572237:web:6f59215375cab9e545a2c4"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const songListContainer = document.querySelector('.song-list');
-const nowPlaying = document.querySelector('.now-playing');
+const songList = document.getElementById('song-list');
+const search = document.getElementById('search');
+const mini = document.getElementById('mini-player');
+const full = document.getElementById('full-player');
 
-function renderSongCard(song) {
-  const card = document.createElement('div');
-  card.className = 'song-card';
+let currentSongIndex = 0;
+let songs = [];
 
-  card.innerHTML = `
-    <img class="song-thumbnail" src="${song.thumbnail}" alt="cover" />
-    <div class="song-info">
-      <p class="song-title">${song.title}</p>
-      <p class="song-category">${song.category || 'Unknown'}</p>
+function createCard(song, index) {
+  const div = document.createElement('div');
+  div.className = 'song-card';
+  div.innerHTML = `
+    <img src="${song.thumbnail}" />
+    <div>
+      <h3>${song.title}</h3>
+      <p>${song.category}</p>
     </div>
-    <button class="play-btn">Play</button>
   `;
-
-  card.querySelector('.play-btn').addEventListener('click', () => {
-    playSong(song);
-  });
-
-  songListContainer.appendChild(card);
+  div.onclick = () => playSong(index);
+  return div;
 }
 
-function playSong(song) {
-  nowPlaying.classList.add('show');
-  nowPlaying.innerHTML = `
-    <img src="${song.thumbnail}" alt="cover" />
-    <div class="title">${song.title}</div>
-    <audio controls autoplay src="${song.audio_url}"></audio>
-  `;
-}
-
-// Load songs from Firebase
-function loadSongs() {
-  db.ref('songs').on('value', snapshot => {
-    const songs = snapshot.val();
-    songListContainer.innerHTML = '';
-    for (let id in songs) {
-      renderSongCard(songs[id]);
+function renderSongs() {
+  songList.innerHTML = "";
+  songs.forEach((song, i) => {
+    if (song.title.toLowerCase().includes(search.value.toLowerCase())) {
+      songList.appendChild(createCard(song, i));
     }
   });
 }
 
-loadSongs();
-let allSongs = [];
+search.oninput = renderSongs;
 
-function fetchSongs() {
-  firebase.database().ref("songs").once("value", function (snapshot) {
-    const data = snapshot.val();
-    const songs = Object.values(data);
-    allSongs = songs;
-    displaySongs(songs); // You must already have this function in your file
-  });
+function playSong(index) {
+  currentSongIndex = index;
+  const song = songs[index];
+
+  document.getElementById("mini-thumbnail").src = song.thumbnail;
+  document.getElementById("mini-title").textContent = song.title;
+
+  document.getElementById("full-thumbnail").src = song.thumbnail;
+  document.getElementById("full-title").textContent = song.title;
+
+  const audio = document.getElementById("audio");
+  audio.src = song.audio_url.replace("watch?v=", "embed/");
+  audio.play();
+
+  mini.classList.remove('hidden');
+  full.classList.remove('hidden');
 }
 
-fetchSongs(); // Load on start
+document.getElementById("back-btn").onclick = () => {
+  full.classList.add('hidden');
+};
 
-const searchInput = document.getElementById("searchInput");
+document.getElementById("play-pause-btn").onclick = () => {
+  const audio = document.getElementById("audio");
+  if (audio.paused) audio.play();
+  else audio.pause();
+};
 
-searchInput.addEventListener("input", function () {
-  const searchTerm = searchInput.value.toLowerCase();
-  const filtered = allSongs.filter(song =>
-    song.title.toLowerCase().includes(searchTerm)
-  );
-  displaySongs(filtered);
+document.getElementById("next-btn").onclick = () => {
+  if (currentSongIndex + 1 < songs.length) playSong(currentSongIndex + 1);
+};
+
+document.getElementById("prev-btn").onclick = () => {
+  if (currentSongIndex > 0) playSong(currentSongIndex - 1);
+};
+
+// Fetch from Firebase
+db.ref("songs").once("value").then((snapshot) => {
+  songs = Object.values(snapshot.val());
+  renderSongs();
 });
